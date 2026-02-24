@@ -11,10 +11,14 @@ type Params = {
 };
 
 export async function generateStaticParams() {
-  const posts = await getBlogs();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  try {
+    const posts = await getBlogs();
+    return posts.map((post) => ({
+      slug: post.slug,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: Params) {

@@ -17,18 +17,22 @@ type Params = {
 };
 
 export async function generateStaticParams() {
-    const categories = await getCategories();
-    const products = await getAllProducts();
+    try {
+        const categories = await getCategories();
+        const products = await getAllProducts();
 
-    const categoryParams = categories.map((category) => ({
-        slug: category.slug,
-    }));
+        const categoryParams = categories.map((category) => ({
+            slug: category.slug,
+        }));
 
-    const productParams = products.map((product) => ({
-        slug: product.slug,
-    }));
+        const productParams = products.map((product) => ({
+            slug: product.slug,
+        }));
 
-    return [...categoryParams, ...productParams];
+        return [...categoryParams, ...productParams];
+    } catch {
+        return [];
+    }
 }
 
 export async function generateMetadata({ params }: Params) {
