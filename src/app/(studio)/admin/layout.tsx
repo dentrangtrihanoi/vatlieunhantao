@@ -7,12 +7,22 @@ import NextTopLoader from "nextjs-toploader";
 import DashboardWrapper from "./_components/DashboardWrapper";
 import { getSiteName } from "@/get-api-data/seo-setting";
 
+// Force all admin pages to be server-rendered on demand (not pre-rendered at build time)
+export const dynamic = 'force-dynamic';
+
 export const generateMetadata = async (): Promise<Metadata> => {
-  const site_name = await getSiteName();
-  return {
-    title: `Admin Dashboard | ${site_name}`,
-    description: `This is Admin Dashboard for ${site_name}`,
-  };
+  try {
+    const site_name = await getSiteName();
+    return {
+      title: `Admin Dashboard | ${site_name}`,
+      description: `This is Admin Dashboard for ${site_name}`,
+    };
+  } catch {
+    return {
+      title: 'Admin Dashboard',
+      description: 'Admin Dashboard',
+    };
+  }
 };
 
 export default function RootLayout({
