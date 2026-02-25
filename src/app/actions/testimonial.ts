@@ -33,7 +33,7 @@ export async function createTestimonial(formData: FormData) {
             },
         });
 
-        revalidateTag("testimonials");
+        revalidateTag("testimonials", { expire: 0 });
         revalidatePath("/admin/testimonials");
         revalidatePath("/");
         return { success: "Testimonial created successfully" };
@@ -84,7 +84,7 @@ export async function updateTestimonial(id: string, formData: FormData) {
             },
         });
 
-        revalidateTag("testimonials");
+        revalidateTag("testimonials", { expire: 0 });
         revalidatePath("/admin/testimonials");
         revalidatePath("/");
         return { success: "Testimonial updated successfully" };
@@ -119,7 +119,7 @@ export async function deleteTestimonial(id: string) {
             where: { id },
         });
 
-        revalidateTag("testimonials");
+        revalidateTag("testimonials", { expire: 0 });
         revalidatePath("/admin/testimonials");
         revalidatePath("/");
         return { success: "Testimonial deleted successfully" };
