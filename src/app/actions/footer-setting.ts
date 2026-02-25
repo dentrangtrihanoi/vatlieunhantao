@@ -79,7 +79,7 @@ export const updateFooterSettings = async (formData: FormData) => {
             },
         });
 
-        revalidateTag("footer-setting");
+        revalidateTag("footer-setting", { expire: 0 });
         return successResponse(200, "Footer settings updated successfully", updatedSettings);
     } catch (error: any) {
         console.error("Error updating footer settings:", error?.stack || error);

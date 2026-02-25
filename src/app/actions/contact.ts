@@ -32,7 +32,7 @@ export async function createContactPage(formData: FormData) {
             },
         });
 
-        revalidateTag("contact-page");
+        revalidateTag("contact-page", { expire: 0 });
         return successResponse(201, "Contact page created successfully", contactPage);
     } catch (error: any) {
         console.error("Error creating contact page:", error?.stack || error);
@@ -71,7 +71,7 @@ export async function updateContactPage(id: string, formData: FormData) {
             },
         });
 
-        revalidateTag("contact-page");
+        revalidateTag("contact-page", { expire: 0 });
         return successResponse(200, "Contact page updated successfully", contactPage);
     } catch (error: any) {
         console.error("Error updating contact page:", error?.stack || error);
