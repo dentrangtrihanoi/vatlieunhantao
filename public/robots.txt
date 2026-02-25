@@ -1,9 +1,8 @@
-# *
+# * applies to all bots
 User-agent: *
 Allow: /
+Disallow: /studio/
+Disallow: /api/
 
-# Host
-Host: https://xinghiepcokhi.info
-
-# Sitemaps
+# Sitemap
 Sitemap: https://xinghiepcokhi.info/sitemap.xml
