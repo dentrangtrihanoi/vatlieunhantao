@@ -66,13 +66,13 @@ const HeroCarousal = ({ sliders }: { sliders: any }) => {
               </Link>
             </div>
 
-            <div>
+            <div style={{ minWidth: 320, minHeight: 400 }}>
               <Image
                 src={slider?.sliderImage ? slider?.sliderImage! : "/no image"}
-                alt="headphone"
+                alt={slider?.product?.title || "hero product"}
                 width={320}
                 height={400}
-                priority
+                priority={key === 0}
               />
             </div>
           </div>

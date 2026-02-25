@@ -31,7 +31,7 @@ const FooterFeature = () => {
         <div className="flex flex-wrap items-center gap-7.5 xl:gap-12.5">
           {featureData.map((item, key) => (
             <div className="flex items-center gap-4" key={key}>
-              <Image src={item.img} alt="icons" width={40} height={41} />
+              <Image src={item.img} alt={item.title} width={40} height={41} loading="eager" />
 
               <div>
                 <h3 className="text-lg font-semibold text-dark">
