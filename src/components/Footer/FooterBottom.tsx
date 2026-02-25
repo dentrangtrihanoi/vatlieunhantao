@@ -42,7 +42,8 @@ import { getSeoSettings } from "@/app/actions/seo-setting";
 
 export default async function FooterBottom() {
   const year = new Date().getFullYear();
-  const { data: seoData } = await getSeoSettings();
+  const seoResult = await getSeoSettings();
+  const seoData = 'data' in seoResult ? seoResult.data : null;
   const siteName = seoData?.siteName || "Pimjo";
 
   return (
