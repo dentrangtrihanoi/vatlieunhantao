@@ -9,12 +9,20 @@ import { getHeaderSettings } from "@/get-api-data/header-setting";
 
 import FloatingContact from "@/components/Common/FloatingContact";
 
+// Force all (site) pages to be server-rendered on demand, not pre-rendered at build time
+export const dynamic = 'force-dynamic';
+
 export default async function SiteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const headerSettingData = await getHeaderSettings();
+  let headerSettingData = null;
+  try {
+    headerSettingData = await getHeaderSettings();
+  } catch {
+    // DB not available at build time, will be available at runtime
+  }
   return (
     <div>
       <PreLoader />
