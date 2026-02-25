@@ -43,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             url: `${BASE_URL}/${product.slug}`,
             lastModified: product.updatedAt,
             changeFrequency: "weekly" as const,
-            priority: 0.9,
+            priority: 0.8,
         }));
     } catch {
         // DB unavailable
