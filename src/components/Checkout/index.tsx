@@ -7,7 +7,6 @@ import { useCart } from "@/hooks/useCart";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { EmptyCartIcon } from "@/assets/icons";
-import CheckoutPaymentArea from "./CheckoutPaymentArea";
 import CheckoutAreaWithoutStripe from "./CheckoutAreaWithoutStripe";
 
 
