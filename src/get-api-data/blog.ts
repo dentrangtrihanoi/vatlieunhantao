@@ -168,11 +168,7 @@ export const getRandomBlogs = unstable_cache(
         mainImage: true,
         metadata: true,
         createdAt: true,
-        updatedAt: true,
         body: true,
-        authorId: true,
-        categoryId: true,
-        tags: true,
       },
     });
 

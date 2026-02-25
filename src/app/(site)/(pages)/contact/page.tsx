@@ -3,6 +3,7 @@ import Contact from "@/components/Contact";
 import { getSiteName } from "@/get-api-data/seo-setting";
 import Breadcrumb from "@/components/Common/Breadcrumb";
 import { getContactPage } from "@/get-api-data/contact";
+import { getFooterSettings } from "@/app/actions/footer-setting";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const site_name = await getSiteName();
@@ -22,17 +23,13 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
-import { getFooterSettings } from "@/app/actions/footer-setting";
-
-// ... existing imports
-
 const ContactPage = async () => {
 
   const contactData = await getContactPage();
   const contactItem = contactData[0] || null;
 
   const footerSettingResponse = await getFooterSettings();
-  const contactInfo = 'data' in footerSettingResponse ? footerSettingResponse.data : null;
+  const contactInfo = footerSettingResponse?.success ? footerSettingResponse.data : null;
 
   return (
     <main>

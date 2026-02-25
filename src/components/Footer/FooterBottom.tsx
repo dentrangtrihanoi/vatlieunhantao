@@ -38,12 +38,11 @@ const paymentsData = [
   },
 ];
 
-import { getSeoSettings } from "@/app/actions/seo-setting";
+import { getSeoSettings } from "@/get-api-data/seo-setting";
 
 export default async function FooterBottom() {
   const year = new Date().getFullYear();
-  const seoResult = await getSeoSettings();
-  const seoData = 'data' in seoResult ? seoResult.data : null;
+  const seoData = await getSeoSettings();
   const siteName = seoData?.siteName || "Pimjo";
 
   return (

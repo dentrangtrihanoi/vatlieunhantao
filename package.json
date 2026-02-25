@@ -2,9 +2,6 @@
   "name": "cozycommerce",
   "version": "1.3.0",
   "private": true,
-  "engines": {
-    "node": ">=22.0.0"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
