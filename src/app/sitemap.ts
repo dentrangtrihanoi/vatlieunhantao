@@ -67,5 +67,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
 
-    return [...staticPages, ...productPages, ...blogPages];
+    // Category pages — /{cat.slug} (same [slug] route handles categories)
+    let categoryPages: MetadataRoute.Sitemap = [];
+    try {
+        const categories = await prisma.category.findMany({
+            select: { slug: true, updatedAt: true },
+        });
+        categoryPages = categories.map((cat) => ({
+            url: `${BASE_URL}/${cat.slug}`,
+            lastModified: cat.updatedAt,
+            changeFrequency: "weekly" as const,
+            priority: 0.9,
+        }));
+    } catch {
+        // DB unavailable
+    }
+
+    return [...staticPages, ...productPages, ...blogPages, ...categoryPages];
 }
