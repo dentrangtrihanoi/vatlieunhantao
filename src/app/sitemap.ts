@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prismaDB";
 const BASE_URL = process.env.SITE_URL || "https://xinghiepcokhi.info";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    // Static pages
+    // Static pages (always indexed)
     const staticPages: MetadataRoute.Sitemap = [
         {
             url: `${BASE_URL}/`,
@@ -32,49 +32,51 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         },
     ];
 
-    // Dynamic product pages
+    // Product pages — only where robotsIndex = true
     let productPages: MetadataRoute.Sitemap = [];
     try {
         const products = await prisma.product.findMany({
+            where: { robotsIndex: true },
             select: { slug: true, updatedAt: true },
         });
         productPages = products.map((product) => ({
             url: `${BASE_URL}/${product.slug}`,
             lastModified: product.updatedAt,
             changeFrequency: "weekly" as const,
-            priority: 0.8,
+            priority: 0.9,
         }));
     } catch {
         // DB unavailable
     }
 
-    // Dynamic blog post pages
+    // Blog post pages — only where robotsIndex = true
     let blogPages: MetadataRoute.Sitemap = [];
     try {
         const posts = await prisma.post.findMany({
+            where: { robotsIndex: true },
             select: { slug: true, updatedAt: true },
         });
         blogPages = posts.map((post) => ({
             url: `${BASE_URL}/blog/${post.slug}`,
             lastModified: post.updatedAt,
             changeFrequency: "monthly" as const,
-            priority: 0.7,
+            priority: 0.8,
         }));
     } catch {
         // DB unavailable
     }
 
-    // Dynamic category pages
+    // Category pages
     let categoryPages: MetadataRoute.Sitemap = [];
     try {
         const categories = await prisma.category.findMany({
             select: { slug: true, updatedAt: true },
         });
         categoryPages = categories.map((cat) => ({
-            url: `${BASE_URL}/shop?category=${cat.slug}`,
+            url: `${BASE_URL}/shop/${cat.slug}`,
             lastModified: cat.updatedAt,
             changeFrequency: "weekly" as const,
-            priority: 0.7,
+            priority: 0.9,
         }));
     } catch {
         // DB unavailable
