@@ -17,22 +17,18 @@ type Params = {
 };
 
 export async function generateStaticParams() {
-    try {
-        const categories = await getCategories();
-        const products = await getAllProducts();
+    const categories = await getCategories();
+    const products = await getAllProducts();
 
-        const categoryParams = categories.map((category) => ({
-            slug: category.slug,
-        }));
+    const categoryParams = categories.map((category) => ({
+        slug: category.slug,
+    }));
 
-        const productParams = products.map((product) => ({
-            slug: product.slug,
-        }));
+    const productParams = products.map((product) => ({
+        slug: product.slug,
+    }));
 
-        return [...categoryParams, ...productParams];
-    } catch {
-        return [];
-    }
+    return [...categoryParams, ...productParams];
 }
 
 export async function generateMetadata({ params }: Params) {
@@ -83,6 +79,7 @@ export async function generateMetadata({ params }: Params) {
                 card: "summary_large_image",
                 title: `${categoryData?.metaTitle || categoryData?.title} | ${site_name}`,
                 description: `${categoryData?.metaDescription || categoryData?.description?.slice(0, 136)}...`,
+                description: `${categoryData?.description?.slice(0, 136)}...`,
                 creator: site_name,
                 site: `${siteURL}/${categoryData?.slug}`,
                 images: [categoryData.img || ""],
@@ -106,12 +103,12 @@ export async function generateMetadata({ params }: Params) {
                 canonical: `${siteURL}/${product?.slug}`,
             },
             robots: {
-                index: (product as any).robotsIndex ?? true,
-                follow: (product as any).robotsFollow ?? true,
+                index: product.robotsIndex ?? true,
+                follow: product.robotsFollow ?? true,
                 nocache: true,
                 googleBot: {
-                    index: (product as any).robotsIndex ?? true,
-                    follow: (product as any).robotsFollow ?? true,
+                    index: product.robotsIndex ?? true,
+                    follow: product.robotsFollow ?? true,
                     "max-video-preview": -1,
                     "max-image-preview": "large",
                     "max-snippet": -1,

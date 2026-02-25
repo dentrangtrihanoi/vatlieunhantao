@@ -12,35 +12,28 @@ const roboto = Roboto({
 })
 
 export async function generateMetadata(): Promise<Metadata> {
-  try {
-    const seoSettings = await getSeoSettings();
-    const site_name = await getSiteName();
-    return {
-      title: seoSettings?.metaTitle || seoSettings?.siteTitle || `Cửa hàng`,
-      description: seoSettings?.metaDescription || seoSettings?.metadescription || "Đây là trang web của chúng tôi",
-      keywords: seoSettings?.metaKeywords || "e-commerce, online store",
-      openGraph: {
-        images: seoSettings?.metaImage ? [seoSettings.metaImage] : [],
-      },
-      robots: {
-        index: seoSettings?.robotsIndex ?? true,
-        follow: seoSettings?.robotsFollow ?? true,
-      },
-      alternates: {
-        canonical: process.env.SITE_URL,
-      },
-      icons: {
-        icon: seoSettings?.favicon || "/favicon.ico",
-        shortcut: seoSettings?.favicon || "/favicon.ico",
-        apple: seoSettings?.favicon || "/favicon.ico",
-      },
-    };
-  } catch {
-    return {
-      title: "Cửa hàng",
-      description: "Đây là trang web của chúng tôi",
-    };
-  }
+  const seoSettings = await getSeoSettings();
+  const site_name = await getSiteName();
+  return {
+    title: seoSettings?.metaTitle || seoSettings?.siteTitle || `Cửa hàng CozyCommerce`,
+    description: seoSettings?.metaDescription || seoSettings?.metadescription || "Đây là trang web của CozyCommerce",
+    keywords: seoSettings?.metaKeywords || "e-commerce, online store",
+    openGraph: {
+      images: seoSettings?.metaImage ? [seoSettings.metaImage] : [],
+    },
+    robots: {
+      index: seoSettings?.robotsIndex ?? true,
+      follow: seoSettings?.robotsFollow ?? true,
+    },
+    alternates: {
+      canonical: process.env.SITE_URL,
+    },
+    icons: {
+      icon: seoSettings?.favicon || "/favicon.ico",
+      shortcut: seoSettings?.favicon || "/favicon.ico",
+      apple: seoSettings?.favicon || "/favicon.ico",
+    },
+  };
 }
 
 export default async function RootLayout({
@@ -48,12 +41,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let seoSettings = null;
-  try {
-    seoSettings = await getSeoSettings();
-  } catch {
-    // DB not available during build, use defaults
-  }
+  const seoSettings = await getSeoSettings();
   return (
     <html lang="en">
       <head>

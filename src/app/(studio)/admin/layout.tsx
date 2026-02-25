@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import { Metadata } from "next";
 import ScrollToTop from "@/components/Common/ScrollToTop";
 import PreLoader from "@/components/Common/PreLoader";
