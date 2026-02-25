@@ -32,7 +32,7 @@ const ContactPage = async () => {
   const contactItem = contactData[0] || null;
 
   const footerSettingResponse = await getFooterSettings();
-  const contactInfo = footerSettingResponse?.data;
+  const contactInfo = 'data' in footerSettingResponse ? footerSettingResponse.data : null;
 
   return (
     <main>
