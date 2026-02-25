@@ -62,7 +62,7 @@ const ContactForm = ({ contactItem }: Props) => {
         try {
             if (contactItem) {
                 const res = await updateContactPage(contactItem.id.toString(), formData);
-                if (res.status === 200) {
+                if (res.success) {
                     toast.success(res.message);
                     router.refresh();
                 } else {
@@ -70,7 +70,7 @@ const ContactForm = ({ contactItem }: Props) => {
                 }
             } else {
                 const res = await createContactPage(formData);
-                if (res.status === 201) {
+                if (res.success) {
                     toast.success(res.message);
                     router.refresh();
                 } else {
