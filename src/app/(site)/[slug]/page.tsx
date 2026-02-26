@@ -107,12 +107,12 @@ export async function generateMetadata({ params }: Params) {
                 canonical: `${siteURL}/${product?.slug}`,
             },
             robots: {
-                index: true,
-                follow: true,
+                index: product.robotsIndex ?? true,
+                follow: product.robotsFollow ?? true,
                 nocache: true,
                 googleBot: {
-                    index: true,
-                    follow: true,
+                    index: product.robotsIndex ?? true,
+                    follow: product.robotsFollow ?? true,
                     "max-video-preview": -1,
                     "max-image-preview": "large",
                     "max-snippet": -1,

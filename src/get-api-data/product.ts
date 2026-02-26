@@ -271,6 +271,8 @@ export const getProductBySlug = async (slug: string) => {
       sku: true,
       metaTitle: true,
       metaDescription: true,
+      robotsIndex: true,
+      robotsFollow: true,
     },
   });
   if (!product) {

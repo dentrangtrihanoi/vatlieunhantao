@@ -230,8 +230,8 @@ export default function ProductAddForm({ product, categories }: ProductProps) {
       if (data.metaTitle) formData.append("metaTitle", data.metaTitle);
       if (data.metaDescription)
         formData.append("metaDescription", data.metaDescription);
-      formData.append("robotsIndex", String(data.robotsIndex ?? true));
-      formData.append("robotsFollow", String(data.robotsFollow ?? true));
+      formData.append("robotsIndex", String(data.robotsIndex));
+      formData.append("robotsFollow", String(data.robotsFollow));
 
       // ✅ Fix: Send additionalInformation & customAttributes as JSON
       formData.append(
