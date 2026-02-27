@@ -20,10 +20,9 @@ import { calculateDiscountPercentage } from "@/utils/calculateDiscountPercentage
 type Props = {
   bgClr?: string;
   item: Product;
-  isPriority?: boolean;
 };
 // add updated the type here
-const ProductItem = ({ item, bgClr = "[#F6F7FB]", isPriority = false }: Props) => {
+const ProductItem = ({ item, bgClr = "[#F6F7FB]" }: Props) => {
   const defaultVariant = item?.productVariants.find(
     (variant) => variant.isDefault
   );
@@ -104,7 +103,6 @@ const ProductItem = ({ item, bgClr = "[#F6F7FB]", isPriority = false }: Props) =
               alt={item.title || "product-image"}
               fill
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-              priority={isPriority}
               className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
             />
           </div>

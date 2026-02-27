@@ -17,13 +17,11 @@ const getExcerpt = (htmlContent: string, maxLength: number = 200): string => {
 const BlogItem = ({
   blog,
   featured = false,
-  compact = false,
-  isPriority = false,
+  compact = false
 }: {
   blog: Blog;
   featured?: boolean;
   compact?: boolean;
-  isPriority?: boolean;
 }) => {
   return (
     <div className="shadow-1 bg-white rounded-xl overflow-hidden h-full flex flex-col">
@@ -35,11 +33,10 @@ const BlogItem = ({
           src={
             blog.mainImage ? blog?.mainImage : '/no image'
           }
-          alt={blog.title || "blog"}
+          alt="blog"
           className="w-full h-full object-cover"
           width={400}
           height={300}
-          priority={isPriority}
         />
       </Link>
 

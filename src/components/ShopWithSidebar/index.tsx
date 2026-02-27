@@ -184,13 +184,12 @@ const ShopWithSidebar = ({ data }: PropsType) => {
                       : "flex flex-col gap-6"
                   }
                 >
-                  {currentItems.map((product, index) => {
+                  {currentItems.map((product) => {
                     return productStyle === "grid" ? (
                       <ProductItem
                         key={product.id}
                         item={product}
                         bgClr="white"
-                        isPriority={index === 0}
                       />
                     ) : (
                       <SingleListItem key={product.id} item={product} />

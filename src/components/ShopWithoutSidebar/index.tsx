@@ -29,9 +29,9 @@ const ShopWithoutSidebar = ({ shopData }: { shopData: Product[] }) => {
                   : "flex flex-col gap-6"
                   }`}
               >
-                {currentItems.map((item, index) =>
+                {currentItems.map((item) =>
                   productStyle === "grid" ? (
-                    <ProductItem item={item} key={item.id} bgClr="white" isPriority={index === 0} />
+                    <ProductItem item={item} key={item.id} bgClr="white" />
                   ) : (
                     <SingleListItem item={item} key={item.id} />
                   )
