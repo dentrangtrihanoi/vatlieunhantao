@@ -39,7 +39,9 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
   );
   const { openPreviewModal } = usePreviewSlider();
   const router = useRouter();
-  const [previewImg, setPreviewImg] = useState(defaultVariant?.image);
+  const [previewImg, setPreviewImg] = useState(
+    defaultVariant?.image || product?.productVariants?.[0]?.image
+  );
   const [quantity, setQuantity] = useState(1);
   const [activeColor, setActiveColor] = useState(defaultVariant?.color);
   const [activeSize, setActiveSize] = useState(defaultVariant?.size);
@@ -198,7 +200,7 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
                         )}
 
                       <Image
-                        src={previewImg ? previewImg : ""}
+                        src={previewImg || product?.productVariants?.[0]?.image || ""}
                         alt={product.title || "product-image"}
                         width={600}
                         height={600}
