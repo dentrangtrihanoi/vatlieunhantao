@@ -1,9 +1,8 @@
 import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prismaDB';
 
-// Always fetch fresh data - never cache this route
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// Cache for 24 hours; invalidated on-demand when content changes
+export const revalidate = 86400;
 
 const BASE_URL = process.env.SITE_URL || 'https://xinghiepcokhi.info';
 

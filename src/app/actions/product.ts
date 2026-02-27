@@ -8,7 +8,7 @@ import {
 import { prisma } from "@/lib/prismaDB";
 import { errorResponse, successResponse } from "@/lib/response";
 import { AdditionalInformation, AttributeValue } from "@prisma/client";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 // create a product
 export async function createProduct(formData: FormData) {
@@ -134,6 +134,7 @@ export async function createProduct(formData: FormData) {
     });
 
     revalidateTag("products", { expire: 0 });
+    revalidatePath('/sitemap.xml');
 
     return successResponse(201, "Product created successfully", {
       ...product,
@@ -215,10 +216,8 @@ export async function deleteProduct(productId: string) {
     });
 
     revalidateTag("products", { expire: 0 });
-    return successResponse(
-      200,
-      "Product and related data deleted successfully"
-    );
+    revalidatePath('/sitemap.xml');
+    return successResponse(200, "Product and related data deleted successfully");
   } catch (error: any) {
     console.error("Error deleting product:", error?.stack || error);
     return errorResponse(500, error?.message || "Internal server error");
@@ -426,6 +425,7 @@ export async function updateProduct(productId: string, formData: FormData) {
     });
 
     revalidateTag("products", { expire: 0 });
+    revalidatePath('/sitemap.xml');
     return successResponse(200, "Product updated successfully", {
       ...updated_product,
       price: updated_product.price.toNumber(),

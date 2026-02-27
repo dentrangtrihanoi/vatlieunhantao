@@ -4,7 +4,7 @@ import { authenticate } from "@/lib/auth";
 import { deleteImageFromCloudinary, uploadImageToCloudinary } from "@/lib/cloudinaryUpload";
 import { prisma } from "@/lib/prismaDB";
 import { errorResponse, successResponse } from "@/lib/response";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 // create a category 
 export async function createCategory(formData: FormData) {
@@ -57,6 +57,7 @@ export async function createCategory(formData: FormData) {
       },
     });
     revalidateTag("categories", { expire: 0 });
+    revalidatePath('/sitemap.xml');
     return successResponse(201, "Category created successfully", category);
   } catch (error: any) {
     console.error("Error creating category:", error?.stack || error);
@@ -91,6 +92,7 @@ export async function deleteCategory(categoryId: number) {
     await prisma.category.delete({ where: { id: categoryId } });
 
     revalidateTag("categories", { expire: 0 });
+    revalidatePath('/sitemap.xml');
     return successResponse(200, "Category deleted successfully");
   } catch (error: any) {
     console.error("Error deleting category:", error?.stack || error);
@@ -160,6 +162,7 @@ export async function updateCategory(categoryId: number, formData: FormData) {
     });
 
     revalidateTag("categories", { expire: 0 });
+    revalidatePath('/sitemap.xml');
 
     return successResponse(
       200,

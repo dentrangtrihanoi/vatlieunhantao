@@ -4,7 +4,7 @@ import { authenticate } from "@/lib/auth";
 import { deleteImageFromCloudinary, uploadImageToCloudinary } from "@/lib/cloudinaryUpload";
 import { prisma } from "@/lib/prismaDB";
 import { errorResponse, successResponse } from "@/lib/response";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 // create a post author
 export async function createPost(formData: FormData) {
@@ -78,6 +78,7 @@ export async function createPost(formData: FormData) {
     }
 
     revalidateTag("posts", { expire: 0 });
+    revalidatePath('/sitemap.xml');
     return successResponse(200, "Post created successfully");
   } catch (error: any) {
     console.error("Error creating post:", error?.stack || error);
@@ -112,6 +113,7 @@ export async function deletePost(postId: string) {
     await prisma.post.delete({ where: { id: postId } });
 
     revalidateTag("posts", { expire: 0 });
+    revalidatePath('/sitemap.xml');
     return successResponse(200, "Post deleted successfully");
   } catch (error: any) {
     console.error("Error deleting post:", error?.stack || error);
@@ -205,6 +207,7 @@ export async function updatePost(postId: string, formData: FormData) {
     });
 
     revalidateTag("posts", { expire: 0 });
+    revalidatePath('/sitemap.xml');
 
     return successResponse(200, "Post updated successfully", updatedPost);
   } catch (error: any) {
