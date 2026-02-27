@@ -41,7 +41,7 @@ const HomeBlog = async () => {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                     {blogs.map((blog, key) => (
                         <div key={key} className="h-full">
-                            <BlogItem blog={blog} compact={true} priority={key === 0} />
+                            <BlogItem blog={blog} compact={true} />
                         </div>
                     ))}
                 </div>
