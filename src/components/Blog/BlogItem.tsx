@@ -17,11 +17,13 @@ const getExcerpt = (htmlContent: string, maxLength: number = 200): string => {
 const BlogItem = ({
   blog,
   featured = false,
-  compact = false
+  compact = false,
+  priority = false,
 }: {
   blog: Blog;
   featured?: boolean;
   compact?: boolean;
+  priority?: boolean;
 }) => {
   return (
     <div className="shadow-1 bg-white rounded-xl overflow-hidden h-full flex flex-col">
@@ -37,6 +39,7 @@ const BlogItem = ({
           className="w-full h-full object-cover"
           width={400}
           height={300}
+          priority={priority}
         />
       </Link>
 
