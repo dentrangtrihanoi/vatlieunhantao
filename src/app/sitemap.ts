@@ -38,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             url: `${BASE_URL}/blog/${p.slug}`,
             lastModified: p.updatedAt,
             changeFrequency: 'monthly',
-            priority: 0.6,
+            priority: 0.7,
         }));
 
         // Only include categories with robotsIndex: true
