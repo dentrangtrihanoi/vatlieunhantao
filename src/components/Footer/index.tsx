@@ -1,6 +1,6 @@
 import Link from "next/link";
 import FooterBottom from "./FooterBottom";
-import { getFooterSettings } from "@/app/actions/footer-setting";
+import { getFooterSettings } from "@/get-api-data/footer-setting";
 import { FacebookIcon, InstagramIcon, LinkedInIcon, TwitterIcon } from "@/assets/icons/social";
 import { CallIcon, EmailIcon, MapIcon } from "@/assets/icons";
 
@@ -10,8 +10,7 @@ type QuickLink = {
 };
 
 const Footer = async () => {
-  const result = await getFooterSettings();
-  const footerData = result.success ? result.data : null;
+  const footerData = await getFooterSettings();
 
   const companyName = footerData?.companyName || "Cozy Commerce";
   const address = footerData?.address || "123 Main St, City, Country";
