@@ -29,7 +29,7 @@ const BlogGrid = async ({ params }: Props) => {
 
   return (
     <>
-      <Breadcrumb 
+      <Breadcrumb
         items={[
           {
             label: "Home",
@@ -50,7 +50,7 @@ const BlogGrid = async ({ params }: Props) => {
         <div className="w-full px-4 mx-auto max-w-7xl sm:px-8 xl:px-0">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-7.5">
             {blogData.length > 0 ? (
-              blogData.map((blog, key) => <BlogItem blog={blog} key={key} />)
+              blogData.map((blog, key) => <BlogItem blog={blog} key={key} isPriority={key === 0} />)
             ) : (
               <p>No posts found!</p>
             )}

@@ -13,7 +13,7 @@ export default function BlogGridItems({ blogData }: { blogData: Blog[] }) {
     <div className="w-full xl:col-span-8">
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         {currentItems.map((blog, key) => (
-          <BlogItem blog={blog} key={key} />
+          <BlogItem blog={blog} key={key} isPriority={key === 0} />
         ))}
       </div>
       {/* pagination start */}

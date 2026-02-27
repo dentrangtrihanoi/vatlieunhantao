@@ -31,6 +31,19 @@ const BlogDetails = ({
                 {blogData?.title}
               </h1>
 
+              {blogData?.mainImage && (
+                <div className="relative w-full aspect-video mb-6 rounded-lg overflow-hidden">
+                  <Image
+                    src={blogData.mainImage}
+                    alt={blogData.title || "blog image"}
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 1200px"
+                    className="object-cover"
+                  />
+                </div>
+              )}
+
               <div className="blog-details">
                 <article
                   className="prose lg:prose-xl max-w-none"

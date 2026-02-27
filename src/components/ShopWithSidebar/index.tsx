@@ -98,8 +98,8 @@ const ShopWithSidebar = ({ data }: PropsType) => {
             {/* Sidebar Start */}
             <div
               className={`sidebar-content fixed xl:static bg-gray-2 xl:bg-transparent xl:translate-x-0 xl:rounded-xl left-0 top-0 xl:col-span-3 w-[290px] sm:w-[320px] xl:w-full h-full xl:h-auto  z-99 xl:z-auto transition-transform duration-300 ease-in-out ${productSidebar
-                  ? "translate-x-0 "
-                  : "-translate-x-full xl:translate-x-0"
+                ? "translate-x-0 "
+                : "-translate-x-full xl:translate-x-0"
                 }`}
             >
               {/* Mobile header with close button */}
@@ -154,8 +154,8 @@ const ShopWithSidebar = ({ data }: PropsType) => {
                       onClick={() => setProductStyle("grid")}
                       aria-label="button for product grid tab"
                       className={`${productStyle === "grid"
-                          ? "bg-blue border-blue text-white"
-                          : "text-dark bg-gray-1 border-gray-3"
+                        ? "bg-blue border-blue text-white"
+                        : "text-dark bg-gray-1 border-gray-3"
                         } flex items-center justify-center w-10 h-10 rounded-lg border ease-out duration-200 hover:bg-blue hover:border-blue hover:text-white`}
                     >
                       <FourSquaresIcon />
@@ -165,8 +165,8 @@ const ShopWithSidebar = ({ data }: PropsType) => {
                       onClick={() => setProductStyle("list")}
                       aria-label="button for product list tab"
                       className={`${productStyle === "list"
-                          ? "bg-blue border-blue text-white"
-                          : "text-dark bg-gray-1 border-gray-3"
+                        ? "bg-blue border-blue text-white"
+                        : "text-dark bg-gray-1 border-gray-3"
                         } flex items-center justify-center w-10 h-10 rounded-lg border ease-out duration-200 hover:bg-blue hover:border-blue hover:text-white`}
                     >
                       <TwoSquaresIcon />
@@ -184,12 +184,13 @@ const ShopWithSidebar = ({ data }: PropsType) => {
                       : "flex flex-col gap-6"
                   }
                 >
-                  {currentItems.map((product) => {
+                  {currentItems.map((product, index) => {
                     return productStyle === "grid" ? (
                       <ProductItem
                         key={product.id}
                         item={product}
                         bgClr="white"
+                        isPriority={index === 0}
                       />
                     ) : (
                       <SingleListItem key={product.id} item={product} />

@@ -18,12 +18,12 @@ const BlogItem = ({
   blog,
   featured = false,
   compact = false,
-  priority = false,
+  isPriority = false,
 }: {
   blog: Blog;
   featured?: boolean;
   compact?: boolean;
-  priority?: boolean;
+  isPriority?: boolean;
 }) => {
   return (
     <div className="shadow-1 bg-white rounded-xl overflow-hidden h-full flex flex-col">
@@ -35,11 +35,11 @@ const BlogItem = ({
           src={
             blog.mainImage ? blog?.mainImage : '/no image'
           }
-          alt="blog"
+          alt={blog.title || "blog"}
           className="w-full h-full object-cover"
           width={400}
           height={300}
-          priority={priority}
+          priority={isPriority}
         />
       </Link>
 

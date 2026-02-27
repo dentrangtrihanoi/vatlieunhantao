@@ -20,7 +20,7 @@ const BlogGrid = async () => {
               {/* Featured Post (Left Half) */}
               {featuredPost && (
                 <div className="lg:row-span-2">
-                  <BlogItem blog={featuredPost} featured />
+                  <BlogItem blog={featuredPost} featured isPriority />
                 </div>
               )}
 
