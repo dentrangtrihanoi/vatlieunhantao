@@ -17,7 +17,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         // Dynamic product pages
         const products = await prisma.product.findMany({
             select: { slug: true, updatedAt: true },
-            where: { status: 'active' },
         });
         const productRoutes: MetadataRoute.Sitemap = products.map((p) => ({
             url: `${BASE_URL}/${p.slug}`,
@@ -29,7 +28,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         // Dynamic blog posts
         const posts = await prisma.post.findMany({
             select: { slug: true, updatedAt: true },
-            where: { status: 'published' },
         });
         const postRoutes: MetadataRoute.Sitemap = posts.map((p) => ({
             url: `${BASE_URL}/blog/${p.slug}`,
