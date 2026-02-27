@@ -14,9 +14,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
 
     try {
-        // Dynamic product pages
+        // Only include products with robotsIndex: true
         const products = await prisma.product.findMany({
             select: { slug: true, updatedAt: true },
+            where: { robotsIndex: true },
         });
         const productRoutes: MetadataRoute.Sitemap = products.map((p) => ({
             url: `${BASE_URL}/${p.slug}`,
@@ -25,9 +26,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.8,
         }));
 
-        // Dynamic blog posts
+        // Only include posts with robotsIndex: true
         const posts = await prisma.post.findMany({
             select: { slug: true, updatedAt: true },
+            where: { robotsIndex: true },
         });
         const postRoutes: MetadataRoute.Sitemap = posts.map((p) => ({
             url: `${BASE_URL}/blog/${p.slug}`,
@@ -36,9 +38,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.6,
         }));
 
-        // Dynamic category pages
+        // Only include categories with robotsIndex: true
         const categories = await prisma.category.findMany({
             select: { slug: true, updatedAt: true },
+            where: { robotsIndex: true },
         });
         const categoryRoutes: MetadataRoute.Sitemap = categories.map((c) => ({
             url: `${BASE_URL}/${c.slug}`,
