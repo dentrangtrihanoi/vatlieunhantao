@@ -50,7 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             url: `${BASE_URL}/${c.slug}`,
             lastModified: c.updatedAt,
             changeFrequency: 'weekly',
-            priority: 0.7,
+            priority: 0.9,
         }));
 
         return [...staticRoutes, ...productRoutes, ...postRoutes, ...categoryRoutes];
