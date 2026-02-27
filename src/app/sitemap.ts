@@ -1,6 +1,10 @@
 import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prismaDB';
 
+// Always fetch fresh data - never cache this route
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const BASE_URL = process.env.SITE_URL || 'https://xinghiepcokhi.info';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -52,7 +56,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
         return [...staticRoutes, ...productRoutes, ...postRoutes, ...categoryRoutes];
     } catch {
-        // DB not available, return static routes only
         return staticRoutes;
     }
 }
