@@ -202,8 +202,9 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
                         alt={product.title || "product-image"}
                         width={600}
                         height={600}
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         className="w-full h-full object-contain"
-                        unoptimized={true}
+                        priority
                       />
                     </div>
                   </div>
@@ -229,7 +230,6 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
                               src={item.image}
                               alt="thumbnail"
                               className="w-full h-full object-cover"
-                              unoptimized={true}
                               onError={() => handleThumbnailError(key)}
                             />
                           </button>
