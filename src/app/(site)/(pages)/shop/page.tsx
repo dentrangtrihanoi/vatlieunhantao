@@ -9,8 +9,9 @@ import Breadcrumb from "@/components/Common/Breadcrumb";
 export const generateMetadata = async (): Promise<Metadata> => {
   const site_name = await getSiteName();
   return {
-    title: `Shop With Sidebar Page | ${site_name}`,
-    description: `This is Shop With Sidebar Page for ${site_name}`,
+    title: `Shop | ${site_name}`,
+    description: `This is Shop Page for ${site_name}`,
+    robots: { index: false, follow: false },
   };
 };
 

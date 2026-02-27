@@ -7,10 +7,9 @@ export const revalidate = 86400;
 const BASE_URL = process.env.SITE_URL || 'https://xinghiepcokhi.info';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    // Static pages
+    // Static pages (noindex pages like /shop are excluded)
     const staticRoutes: MetadataRoute.Sitemap = [
         { url: BASE_URL, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
-        { url: `${BASE_URL}/shop`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
         { url: `${BASE_URL}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
         { url: `${BASE_URL}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
         { url: `${BASE_URL}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
