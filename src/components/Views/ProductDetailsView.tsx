@@ -1,13 +1,18 @@
-
+import { preload } from 'react-dom';
 import ShopDetails from "@/components/ShopDetails";
 import { getRelatedProducts } from "@/get-api-data/product";
 import { IProductByDetails } from "@/types/product";
 import RecentlyViewedItems from "@/components/ShopDetails/RecentlyViewd";
-
 import { getReviews } from "@/get-api-data/reviews";
 import Breadcrumb from "@/components/Common/Breadcrumb";
 
 const ProductDetailsView = async ({ product }: { product: IProductByDetails }) => {
+    // Preload main product image for LCP — Server Component preload adds fetchpriority=high to <head>
+    const defaultVariant = product?.productVariants?.find((v) => v.isDefault);
+    if (defaultVariant?.image) {
+        preload(defaultVariant.image, { as: 'image', fetchPriority: 'high' });
+    }
+
     const recentProducts = await getRelatedProducts(
         product.category?.title!,
         product.tags!,
@@ -15,13 +20,7 @@ const ProductDetailsView = async ({ product }: { product: IProductByDetails }) =
         product.title!
     );
 
-    const defaultVariant = product?.productVariants?.find(
-        (variant) => variant.isDefault
-    );
-
     const { avgRating, totalRating } = await getReviews(product.slug!);
-
-
 
     return (
         <main>
@@ -47,7 +46,6 @@ const ProductDetailsView = async ({ product }: { product: IProductByDetails }) =
                 totalRating={totalRating}
             />
             <RecentlyViewedItems products={recentProducts} />
-
         </main>
     );
 };
