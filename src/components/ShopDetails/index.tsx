@@ -197,18 +197,15 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
                           </div>
                         )}
 
-                      {previewImg ? (
-                        <img
-                          src={`/_next/image?url=${encodeURIComponent(previewImg)}&w=1200&q=75`}
-                          srcSet={[640, 828, 1080, 1200].map(w => `/_next/image?url=${encodeURIComponent(previewImg)}&w=${w}&q=75 ${w}w`).join(', ')}
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                          alt={product.title || "product-image"}
-                          className="w-full h-full object-contain"
-                          fetchPriority="high"
-                          decoding="async"
-                          style={{ color: 'transparent' }}
-                        />
-                      ) : null}
+                      <Image
+                        src={previewImg ? previewImg : ""}
+                        alt={product.title || "product-image"}
+                        width={600}
+                        height={600}
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="w-full h-full object-contain"
+                        priority
+                      />
                     </div>
                   </div>
 

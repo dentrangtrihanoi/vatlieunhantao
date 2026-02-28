@@ -230,23 +230,6 @@ const DispatcherPage = async ({ params, searchParams }: Params) => {
 
         return (
             <>
-                {imageUrl && (() => {
-                    const encodedUrl = encodeURIComponent(imageUrl);
-                    const q = 75;
-                    const srcSet = [640, 828, 1080, 1200]
-                        .map(w => `/_next/image?url=${encodedUrl}&w=${w}&q=${q} ${w}w`)
-                        .join(', ');
-                    return (
-                        <link
-                            rel="preload"
-                            as="image"
-                            // @ts-ignore – imageSrcSet/imageSizes are valid HTML attrs for preload
-                            imageSrcSet={srcSet}
-                            imageSizes="(max-width: 768px) 100vw, 50vw"
-                            fetchPriority="high"
-                        />
-                    );
-                })()}
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
