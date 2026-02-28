@@ -39,9 +39,7 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
   );
   const { openPreviewModal } = usePreviewSlider();
   const router = useRouter();
-  const [previewImg, setPreviewImg] = useState(
-    defaultVariant?.image || product?.productVariants?.[0]?.image
-  );
+  const [previewImg, setPreviewImg] = useState(defaultVariant?.image);
   const [quantity, setQuantity] = useState(1);
   const [activeColor, setActiveColor] = useState(defaultVariant?.color);
   const [activeSize, setActiveSize] = useState(defaultVariant?.size);
@@ -199,15 +197,18 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
                           </div>
                         )}
 
-                      <Image
-                        src={previewImg || product?.productVariants?.[0]?.image || ""}
-                        alt={product.title || "product-image"}
-                        width={600}
-                        height={600}
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="w-full h-full object-contain"
-                        priority
-                      />
+                      {previewImg ? (
+                        <img
+                          src={`/_next/image?url=${encodeURIComponent(previewImg)}&w=1200&q=75`}
+                          srcSet={[640, 828, 1080, 1200].map(w => `/_next/image?url=${encodeURIComponent(previewImg)}&w=${w}&q=75 ${w}w`).join(', ')}
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          alt={product.title || "product-image"}
+                          className="w-full h-full object-contain"
+                          fetchPriority="high"
+                          decoding="async"
+                          style={{ color: 'transparent' }}
+                        />
+                      ) : null}
                     </div>
                   </div>
 
