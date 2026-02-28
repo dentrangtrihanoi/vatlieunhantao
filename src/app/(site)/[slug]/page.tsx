@@ -230,6 +230,15 @@ const DispatcherPage = async ({ params, searchParams }: Params) => {
 
         return (
             <>
+                {imageUrl && (
+                    <link
+                        rel="preload"
+                        as="image"
+                        href={imageUrl}
+                        // @ts-ignore - fetchPriority is a valid HTML attribute
+                        fetchPriority="high"
+                    />
+                )}
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
