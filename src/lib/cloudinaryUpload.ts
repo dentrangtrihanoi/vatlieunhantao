@@ -13,7 +13,7 @@ export async function uploadImageToCloudinary(file: File, folder: string = "next
 
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
-      { folder },
+      { folder, format: 'webp', quality: 'auto' },
       (error, result) => {
         if (error) {
           reject(error);
