@@ -234,8 +234,9 @@ const DispatcherPage = async ({ params, searchParams }: Params) => {
                     <link
                         rel="preload"
                         as="image"
-                        href={imageUrl}
-                        // @ts-ignore - fetchPriority is a valid HTML attribute
+                        href={`/_next/image?url=${encodeURIComponent(imageUrl)}&w=750&q=75`}
+                        // @ts-ignore – imagesizes is valid HTML5 but not yet in React types
+                        imagesizes="(max-width: 768px) 100vw, 50vw"
                         fetchPriority="high"
                     />
                 )}
