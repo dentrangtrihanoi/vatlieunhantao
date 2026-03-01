@@ -6,14 +6,63 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+/**
+ * Sanitize filename: lowercase, spaces → hyphens, strip special chars
+ * e.g. "Đèn Trang Trí.jpg" → "den-trang-tri"
+ */
+function sanitizeFilename(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+    .replace(/đ/g, "d")
+    .replace(/[^a-z0-9._-]/g, "-")  // Replace invalid chars with -
+    .replace(/-+/g, "-")            // Collapse multiple dashes
+    .replace(/^-|-$/g, "");         // Trim leading/trailing dashes
+}
 
-export async function uploadImageToCloudinary(file: File, folder: string = "next-merce-admin-uploads"): Promise<string> {
-  const bytes = await file.arrayBuffer(); // Convert File to ArrayBuffer
-  const buffer = Buffer.from(bytes); // Convert ArrayBuffer to Buffer
+/**
+ * Find an available public_id. If "folder/name" exists, try "folder/name-1", "folder/name-2", etc.
+ */
+async function findAvailablePublicId(folder: string, baseName: string): Promise<string> {
+  const base = `${folder}/${baseName}`;
+
+  for (let i = 0; i <= 99; i++) {
+    const candidate = i === 0 ? base : `${base}-${i}`;
+    try {
+      await cloudinary.api.resource(candidate);
+      // Resource exists → try next suffix
+    } catch {
+      // Not found → this public_id is available
+      return candidate;
+    }
+  }
+
+  // Fallback: append timestamp if all 100 attempts fail
+  return `${base}-${Date.now()}`;
+}
+
+export async function uploadImageToCloudinary(
+  file: File,
+  folder: string = "next-merce-admin-uploads"
+): Promise<string> {
+  const bytes = await file.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+
+  // Get base name without extension and sanitize
+  const nameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
+  const baseName = sanitizeFilename(nameWithoutExt);
+
+  // Find available sequential public_id
+  const publicId = await findAvailablePublicId(folder, baseName);
 
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
-      { folder, format: 'webp', quality: 'auto', use_filename: true, unique_filename: false },
+      {
+        public_id: publicId,
+        format: "webp",
+        quality: "auto",
+        overwrite: false,
+      },
       (error, result) => {
         if (error) {
           reject(error);
@@ -23,14 +72,13 @@ export async function uploadImageToCloudinary(file: File, folder: string = "next
       }
     );
 
-    uploadStream.end(buffer); // Upload the buffer
+    uploadStream.end(buffer);
   });
 }
 
-
 export async function deleteImageFromCloudinary(imageUrl: string) {
-  // Extract the public ID
-  const regex = /\/upload\/(?:v\d+\/)?([^/.]+(?:\/[^/.]+)*)/;
+  // Extract public_id from URL (works with both old random IDs and new named IDs)
+  const regex = /\/upload\/(?:v\d+\/)?([^.]+)/;
   const matches = imageUrl.match(regex);
 
   if (matches && matches[1]) {
@@ -40,6 +88,3 @@ export async function deleteImageFromCloudinary(imageUrl: string) {
     throw new Error("Invalid Cloudinary URL");
   }
 }
-
-
-
