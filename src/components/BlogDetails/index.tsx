@@ -2,6 +2,7 @@
 import { Blog } from "@/types/blogItem";
 import Image from "next/image";
 import Link from "next/link";
+import { transformCloudinaryImages } from "@/utils/cloudinaryTransform";
 
 import RelatedPostCard from "./RelatedPostCard";
 
@@ -34,7 +35,7 @@ const BlogDetails = ({
               <div className="blog-details">
                 <article
                   className="prose lg:prose-xl max-w-none"
-                  dangerouslySetInnerHTML={{ __html: blogData.body }}
+                  dangerouslySetInnerHTML={{ __html: transformCloudinaryImages(blogData.body) }}
                 />
               </div>
 

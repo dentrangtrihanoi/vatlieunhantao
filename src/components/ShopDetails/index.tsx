@@ -9,6 +9,7 @@ import {
 import { updateproductDetails } from "@/redux/features/product-details";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import { IProductByDetails } from "@/types/product";
+import { transformCloudinaryImages } from "@/utils/cloudinaryTransform";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -294,7 +295,7 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
                   {product.description && (
                     <div
                       className="mb-6 text-base font-medium text-body-color prose prose-sm max-w-none"
-                      dangerouslySetInnerHTML={{ __html: product.description }}
+                      dangerouslySetInnerHTML={{ __html: transformCloudinaryImages(product.description) }}
                     />
                   )}
 

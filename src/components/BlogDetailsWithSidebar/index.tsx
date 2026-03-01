@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Blog } from "@/types/blogItem";
+import { transformCloudinaryImages } from "@/utils/cloudinaryTransform";
 import Categories from "../Blog/Categories";
 import LatestPosts from "../Blog/LatestPosts";
 import LatestProducts from "../Blog/LatestProducts";
@@ -48,7 +49,7 @@ const BlogDetailsWithSidebar = ({ blogData }: { blogData: Blog }) => {
                 <div className="blog-details">
                   <article
                     className="prose lg:prose-xl"
-                    dangerouslySetInnerHTML={{ __html: blogData.body }}
+                    dangerouslySetInnerHTML={{ __html: transformCloudinaryImages(blogData.body) }}
                   />
                 </div>
 

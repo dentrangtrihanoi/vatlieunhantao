@@ -1,6 +1,7 @@
 "use client";
 import { IProductByDetails } from "@/types/product";
 import { useState } from "react";
+import { transformCloudinaryImages } from "@/utils/cloudinaryTransform";
 import AdditionalInformation from "./AdditionalInformation";
 import Reviews from "./Reviews";
 
@@ -59,7 +60,7 @@ const DetailsTabs = ({ product }: { product: IProductByDetails }) => {
               {product?.body && (
                 <div
                   className="prose prose-base max-w-none"
-                  dangerouslySetInnerHTML={{ __html: product.body }}
+                  dangerouslySetInnerHTML={{ __html: transformCloudinaryImages(product.body) }}
                 />
               )}
             </div>

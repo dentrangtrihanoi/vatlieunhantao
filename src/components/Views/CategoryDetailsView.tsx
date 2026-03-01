@@ -1,6 +1,7 @@
 import Breadcrumb from "@/components/Common/Breadcrumb";
 import ShopWithoutSidebar from "@/components/ShopWithoutSidebar";
 import { prisma } from "@/lib/prismaDB";
+import { transformCloudinaryImages } from "@/utils/cloudinaryTransform";
 import { Prisma, Category } from "@prisma/client";
 
 type Props = {
@@ -99,7 +100,7 @@ const CategoryDetailsView = async ({ category, searchParams }: Props) => {
                     <div className="mx-auto max-w-7xl px-4 sm:px-8 xl:px-0">
                         <div
                             className="prose max-w-none text-gray-600"
-                            dangerouslySetInnerHTML={{ __html: category.description }}
+                            dangerouslySetInnerHTML={{ __html: transformCloudinaryImages(category.description) }}
                         />
                     </div>
                 </section>
@@ -112,7 +113,7 @@ const CategoryDetailsView = async ({ category, searchParams }: Props) => {
                     <div className="mx-auto max-w-7xl px-4 sm:px-8 xl:px-0">
                         <div
                             className="prose max-w-none text-gray-600"
-                            dangerouslySetInnerHTML={{ __html: category.descriptionBottom }}
+                            dangerouslySetInnerHTML={{ __html: transformCloudinaryImages(category.descriptionBottom) }}
                         />
                     </div>
                 </section>
