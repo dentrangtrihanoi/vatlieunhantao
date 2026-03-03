@@ -102,12 +102,13 @@ const PreviewSliderModal = () => {
         <Swiper ref={sliderRef} slidesPerView={1} spaceBetween={20}>
           {data.productVariants?.map((img: any, key: number) => (
             <SwiperSlide key={key}>
-              <div className="flex justify-center items-center">
+              <div className="relative w-full h-[80vh] flex justify-center items-center">
                 <Image
                   src={img.image ? img.image : "/"}
                   alt={data.title || "thumb-img"}
-                  width={450}
-                  height={450}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 80vw"
                 />
               </div>
             </SwiperSlide>
