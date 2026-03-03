@@ -1,5 +1,6 @@
 import Footer from "../../components/Footer";
 import ScrollToTop from "@/components/Common/ScrollToTop";
+import AutoScrollToTop from "@/components/Common/AutoScrollToTop";
 import PreLoader from "@/components/Common/PreLoader";
 import { Toaster } from "react-hot-toast";
 import Providers from "./Providers";
@@ -34,6 +35,7 @@ export default async function SiteLayout({
             showSpinner={false}
             shadow="none"
           />
+          <AutoScrollToTop />
           <MainHeader headerData={headerSettingData} />
           <Toaster position="top-center" reverseOrder={false} />
           {children}
