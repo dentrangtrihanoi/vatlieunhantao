@@ -176,16 +176,11 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
             <div className="w-full px-4 mx-auto max-w-7xl sm:px-8 xl:px-0">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-7.5 xl:gap-17.5">
                 <div className="w-full lg:col-span-6">
-                  <div className="lg:min-h-[512px] rounded-lg shadow-1 bg-gray-2 relative flex items-center justify-center overflow-hidden">
+                  <div
+                    className="lg:min-h-[512px] rounded-lg shadow-1 bg-gray-2 relative flex items-center justify-center overflow-hidden cursor-zoom-in"
+                    onClick={handlePreviewSlider}
+                  >
                     <div className="w-full h-full flex items-center justify-center">
-                      <button
-                        onClick={handlePreviewSlider}
-                        aria-label="button for zoom"
-                        className="absolute z-40 flex items-center justify-center duration-200 ease-out rounded-lg gallery__Image w-11 h-11 bg-gray-1 shadow-1 text-dark hover:text-blue top-4 lg:top-6 left-4 lg:left-6"
-                      >
-                        <FullScreenIcon />
-                      </button>
-
                       {product.discountedPrice &&
                         product.discountedPrice < product.price && (
                           <div className="absolute z-40 inline-flex font-medium shrink-0 text-custom-sm text-white bg-blue rounded-full py-0.5 px-2.5 top-4 lg:top-6 right-4 lg:right-6">
