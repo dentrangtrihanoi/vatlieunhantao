@@ -102,14 +102,13 @@ const PreviewSliderModal = () => {
         <Swiper ref={sliderRef} slidesPerView={1} spaceBetween={20}>
           {data.productVariants?.map((img: any, key: number) => (
             <SwiperSlide key={key}>
-              <div className="flex justify-center items-center">
+              <div className="relative w-[90vw] h-[90vh]">
                 <Image
                   src={img.image ? img.image : "/"}
                   alt={data.title || "thumb-img"}
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  style={{ width: 'auto', height: 'auto', maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain' }}
+                  fill
+                  className="object-contain"
+                  sizes="90vw"
                 />
               </div>
             </SwiperSlide>
