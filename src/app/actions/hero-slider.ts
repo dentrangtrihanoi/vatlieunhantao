@@ -71,7 +71,8 @@ export const createHeroSlider = async (formData: FormData) => {
         slug,
         productSlug,
         discountRate: Number(discount),
-        sliderImage: imageUrl
+        sliderImage: imageUrl,
+        imageAlt: (formData.get("imageAlt") as string)?.trim() || null,
       },
     });
     revalidateTag("heroSliders", { expire: 0 });
@@ -185,6 +186,7 @@ export async function updateHeroSlider(heroSliderId: number, formData: FormData)
         productSlug,
         discountRate: Number(discount),
         sliderImage: imageUrl,
+        imageAlt: (formData.get("imageAlt") as string)?.trim() || null,
       },
     });
 

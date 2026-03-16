@@ -136,10 +136,10 @@ const TiptapEditor = ({
     };
 
     const addImage = () => {
-        const url = window.prompt("URL");
-        if (url) {
-            editor.chain().focus().setImage({ src: url }).run();
-        }
+        const url = window.prompt("Image URL");
+        if (!url) return;
+        const alt = window.prompt("Alt text (mô tả ảnh cho SEO, tối đa 125 ký tự)", "") || "";
+        editor.chain().focus().setImage({ src: url, alt }).run();
     };
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,7 +152,8 @@ const TiptapEditor = ({
         try {
             const result = await uploadImage(formData);
             if (result.success && result.url) {
-                editor.chain().focus().setImage({ src: result.url }).run();
+                const alt = window.prompt("Alt text (mô tả ảnh cho SEO, tối đa 125 ký tự)", "") || "";
+                editor.chain().focus().setImage({ src: result.url, alt }).run();
             } else {
                 alert("Image upload failed");
             }

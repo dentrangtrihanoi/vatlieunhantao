@@ -30,6 +30,7 @@ export async function createTestimonial(formData: FormData) {
                 designation: designation || "",
                 review,
                 image: imageUrl,
+                imageAlt: (formData.get("imageAlt") as string)?.trim() || null,
             },
         });
 
@@ -81,6 +82,7 @@ export async function updateTestimonial(id: string, formData: FormData) {
                 designation: designation || "",
                 review,
                 image: imageUrl,
+                imageAlt: (formData.get("imageAlt") as string)?.trim() || null,
             },
         });
 

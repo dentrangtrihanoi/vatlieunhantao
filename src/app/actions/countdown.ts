@@ -62,6 +62,7 @@ export async function createCountdown(formData: FormData) {
         countdownDate: new Date(date),
         slug,
         countdownImage: imageUrl,
+        imageAlt: (formData.get("imageAlt") as string)?.trim() || null,
         productSlug: productSlug,
       },
     });
@@ -143,6 +144,7 @@ export async function updateCountdown(countdownId: number, formData: FormData) {
         countdownDate: new Date(date),
         slug,
         countdownImage: imageUrl,
+        imageAlt: (formData.get("imageAlt") as string)?.trim() || null,
         productSlug,
       },
     });

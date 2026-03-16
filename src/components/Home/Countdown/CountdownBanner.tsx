@@ -48,7 +48,7 @@ const BackgroundImages = ({ data }: CountdownBannerProps) => (
   <>
     <Image
       src={data.countdownImage}
-      alt="product"
+      alt={(data as any).imageAlt?.trim() || data.title || "product"}
       className="mx-auto mt-10 lg:mt-0 lg:absolute lg:block right-4 xl:right-33 bottom-4 xl:bottom-14 -z-1"
       width={316}
       height={370}

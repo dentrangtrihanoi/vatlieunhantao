@@ -21,6 +21,7 @@ interface PostInput {
   mainImage: {
     image: File | null | string;
   };
+  imageAlt: string;
   body: string;
   isFeatured: boolean;
   metaTitle?: string;
@@ -68,6 +69,7 @@ export default function PostForm({
       mainImage: {
         image: postItem?.mainImage || null,
       },
+      imageAlt: (postItem as any)?.imageAlt || "",
       body: postItem?.body || "",
       isFeatured: postItem?.isFeatured || false,
       metaTitle: postItem?.metaTitle || "",
@@ -97,6 +99,7 @@ export default function PostForm({
       if (data.metaTitle) formData.append("metaTitle", data.metaTitle);
       formData.append("robotsIndex", data.robotsIndex.toString());
       formData.append("robotsFollow", data.robotsFollow.toString());
+      if (data.imageAlt) formData.append("imageAlt", data.imageAlt);
       if (data.mainImage.image) {
         formData.append("mainImage", data.mainImage.image);
       } else {
@@ -274,7 +277,33 @@ export default function PostForm({
           )}
         />
 
-        {/* Tags (comma separated) field */}
+        {/* Image Alt Text */}
+        <Controller
+          control={control}
+          name="imageAlt"
+          rules={{ maxLength: { value: 125, message: "Tối đa 125 ký tự" } }}
+          render={({ field, fieldState }) => {
+            const charCount = (field.value || "").length;
+            return (
+              <div className="w-full">
+                <InputGroup
+                  label="Alt text ảnh đại diện (SEO)"
+                  type="text"
+                  placeholder="Mô tả nội dung ảnh cho SEO"
+                  error={!!fieldState.error}
+                  errorMessage={fieldState.error?.message}
+                  name={field.name}
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                />
+                <div className="flex justify-between mt-1">
+                  <span className="text-xs text-gray-400">Mô tả nội dung ảnh. Tối đa 125 ký tự.</span>
+                  <span className="text-xs text-gray-400">{charCount}/125</span>
+                </div>
+              </div>
+            );
+          }}
+        />
         <Controller
           control={control}
           name="tags"

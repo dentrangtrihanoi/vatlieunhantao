@@ -16,7 +16,8 @@ interface CategoryInput {
   slug: string;
   desc: string;
   descBottom: string;
-  image: File | null | string; // User-selected image
+  image: File | null | string;
+  imageAlt: string;
   metaTitle: string;
   metaDescription: string;
   robotsIndex: boolean;
@@ -35,7 +36,8 @@ export default function CategoryForm({ category }: CategoryProps) {
         slug: category?.slug || "", // Prefill slug
         desc: category?.description || "",
         descBottom: category?.descriptionBottom || "",
-        image: category?.img || null, // New image will be stored here
+        image: category?.img || null,
+        imageAlt: (category as any)?.imageAlt || "", // New image will be stored here
         metaTitle: category?.metaTitle || "",
         metaDescription: category?.metaDescription || "",
         robotsIndex: category?.robotsIndex ?? true,
@@ -66,6 +68,7 @@ export default function CategoryForm({ category }: CategoryProps) {
       formData.append("metaDescription", data.metaDescription);
       formData.append("robotsIndex", String(data.robotsIndex));
       formData.append("robotsFollow", String(data.robotsFollow));
+      if (data.imageAlt) formData.append("imageAlt", data.imageAlt);
       if (data.image instanceof File) {
         formData.append("image", data.image); // Only add file if selected
       } else if (typeof data.image === "string") {
@@ -264,6 +267,34 @@ export default function CategoryForm({ category }: CategoryProps) {
             errorMessage={fieldState.error?.message}
           />
         )}
+      />
+
+      {/* Image Alt Text */}
+      <Controller
+        control={control}
+        name="imageAlt"
+        rules={{ maxLength: { value: 125, message: "Tối đa 125 ký tự" } }}
+        render={({ field, fieldState }) => {
+          const charCount = (field.value || "").length;
+          return (
+            <div className="w-full mt-3 mb-5">
+              <InputGroup
+                label="Alt text ảnh danh mục (SEO)"
+                type="text"
+                placeholder="Mô tả nội dung ảnh cho SEO"
+                error={!!fieldState.error}
+                errorMessage={fieldState.error?.message}
+                name={field.name}
+                value={field.value ?? ""}
+                onChange={field.onChange}
+              />
+              <div className="flex justify-between mt-1">
+                <span className="text-xs text-gray-400">Mô tả nội dung ảnh. Tối đa 125 ký tự.</span>
+                <span className="text-xs text-gray-400">{charCount}/125</span>
+              </div>
+            </div>
+          );
+        }}
       />
 
       {/* Submit Button */}

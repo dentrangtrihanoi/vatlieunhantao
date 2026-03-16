@@ -34,6 +34,7 @@ export const getNewArrivalsProduct = unstable_cache(
         productVariants: {
           select: {
             image: true,
+            imageAlt: true,
             color: true,
             size: true,
             isDefault: true
@@ -77,6 +78,7 @@ export const getBestSellingProducts = unstable_cache(
         productVariants: {
           select: {
             image: true,
+            imageAlt: true,
             color: true,
             size: true,
             isDefault: true
@@ -125,6 +127,7 @@ export const getLatestProducts = unstable_cache(
         productVariants: {
           select: {
             image: true,
+            imageAlt: true,
             color: true,
             size: true,
             isDefault: true
@@ -176,6 +179,7 @@ export const getAllProducts = unstable_cache(
         productVariants: {
           select: {
             image: true,
+            imageAlt: true,
             color: true,
             size: true,
             isDefault: true
@@ -343,6 +347,7 @@ export const getRelatedProducts = unstable_cache(
         productVariants: {
           select: {
             image: true,
+            imageAlt: true,
             color: true,
             size: true,
             isDefault: true,

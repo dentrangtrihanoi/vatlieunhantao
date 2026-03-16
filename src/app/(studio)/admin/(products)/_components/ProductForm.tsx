@@ -50,6 +50,7 @@ export default function ProductAddForm({ product, categories }: ProductProps) {
           color: item.color,
           size: item.size,
           image: typeof item.image === "string" ? item.image : null,
+          imageAlt: item.imageAlt || "",
           isDefault: item.isDefault ? item.isDefault : false,
         })) || [],
       additionalInformation: product?.additionalInformation || null,
@@ -76,9 +77,10 @@ export default function ProductAddForm({ product, categories }: ProductProps) {
   const [tempProductvariant, setTempProductvariant] = useState<{
     color: string;
     image: File | null;
+    imageAlt: string;
     size: string;
     isDefault: boolean;
-  }>({ color: "", image: null, size: "", isDefault: false });
+  }>({ color: "", image: null, imageAlt: "", size: "", isDefault: false });
   const [tempAttribute, setTempAttribute] = useState({
     attributeName: "",
     attributeValues: [{ id: "", title: "" }],
@@ -101,6 +103,7 @@ export default function ProductAddForm({ product, categories }: ProductProps) {
     setTempProductvariant({
       color: "",
       image: null,
+      imageAlt: "",
       size: "",
       isDefault: false,
     });
@@ -255,6 +258,7 @@ export default function ProductAddForm({ product, categories }: ProductProps) {
           formData.append(`color_${index}`, thumb.color);
           formData.append(`size_${index}`, thumb.size);
           formData.append(`isDefault_${index}`, thumb.isDefault.toString());
+          if (thumb.imageAlt) formData.append(`imageAlt_${index}`, thumb.imageAlt);
         }
       });
       let result;

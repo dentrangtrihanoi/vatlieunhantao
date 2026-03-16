@@ -63,6 +63,7 @@ export async function createProduct(formData: FormData) {
     const product_variants: {
       color: string;
       image: string;
+      imageAlt: string | null;
       size: string;
       isDeault: boolean;
     }[] = [];
@@ -76,7 +77,9 @@ export async function createProduct(formData: FormData) {
 
       if (file) {
         const imageUrl = await uploadImageToCloudinary(file, "products");
-        product_variants.push({ color, image: imageUrl, size, isDeault });
+        const rawAlt = formData.get(`imageAlt_${i}`) as string | null;
+        const imageAlt = rawAlt?.trim() || null;
+        product_variants.push({ color, image: imageUrl, imageAlt, size, isDeault });
       }
     }
 
@@ -109,6 +112,7 @@ export async function createProduct(formData: FormData) {
           create: product_variants.map((thumbnail) => ({
             color: thumbnail.color,
             image: thumbnail.image,
+            imageAlt: thumbnail.imageAlt,
             size: thumbnail.size,
             isDefault: thumbnail.isDeault,
           })),
@@ -314,6 +318,7 @@ export async function updateProduct(productId: string, formData: FormData) {
       const newThumbnails: {
         color: string;
         image: string;
+        imageAlt: string | null;
         size: string;
         isDeault: boolean;
       }[] = [];
@@ -327,9 +332,13 @@ export async function updateProduct(productId: string, formData: FormData) {
 
         if (file instanceof File) {
           const imageUrl = await uploadImageToCloudinary(file, "products"); // Upload new image
-          newThumbnails.push({ color, image: imageUrl, size, isDeault });
+          const rawAlt = formData.get(`imageAlt_${i}`) as string | null;
+          const imageAlt = rawAlt?.trim() || null;
+          newThumbnails.push({ color, image: imageUrl, imageAlt, size, isDeault });
         } else if (typeof file === "string") {
-          newThumbnails.push({ color, image: file, size, isDeault }); // Keep existing image (if passed)
+          const rawAlt = formData.get(`imageAlt_${i}`) as string | null;
+          const imageAlt = rawAlt?.trim() || null;
+          newThumbnails.push({ color, image: file, imageAlt, size, isDeault }); // Keep existing image (if passed)
         }
       }
 
@@ -338,6 +347,7 @@ export async function updateProduct(productId: string, formData: FormData) {
         data: newThumbnails.map((thumbnail) => ({
           color: thumbnail.color,
           image: thumbnail.image,
+          imageAlt: thumbnail.imageAlt,
           size: thumbnail.size,
           isDefault: thumbnail.isDeault,
           productId,

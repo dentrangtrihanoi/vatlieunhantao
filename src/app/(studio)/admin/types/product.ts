@@ -20,6 +20,7 @@ type variantData = {
   color: string;
   size: string;
   image: File | null | string;
+  imageAlt?: string | null;
   isDefault: boolean
 };
 

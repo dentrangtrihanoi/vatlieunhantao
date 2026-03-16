@@ -6,6 +6,7 @@ interface Thumbnail {
   color: string;
   size: string;
   image: File | null;
+  imageAlt: string;
   isDefault: boolean;
 }
 
@@ -53,6 +54,9 @@ const ThumbImageModal = ({
   const handleSizeChange = (size: string) => {
     setTempProductvariant({ ...tempProductvariant, size });
     setSize(size);
+  };
+  const handleImageAltChange = (imageAlt: string) => {
+    setTempProductvariant({ ...tempProductvariant, imageAlt });
   };
 
   const handleSave = () => {
@@ -122,6 +126,25 @@ const ThumbImageModal = ({
             placeholder="Enter size"
             className="rounded-lg border border-gray-3 text-sm placeholder:text-dark-5 w-full py-2.5 px-4 h-11 focus:ring-0 duration-200 focus:border-blue focus:outline-0"
           />
+        </div>
+
+        {/* Alt Text Input */}
+        <div className="w-full mb-5">
+          <label className="block text-sm font-normal text-gray-600 mb-1.5">
+            Alt text ảnh (SEO)
+          </label>
+          <input
+            value={tempProductvariant.imageAlt || ""}
+            type="text"
+            maxLength={125}
+            onChange={(e) => handleImageAltChange(e.target.value)}
+            placeholder="Mô tả nội dung ảnh cho SEO"
+            className="rounded-lg border border-gray-3 text-sm placeholder:text-dark-5 w-full py-2.5 px-4 h-11 focus:ring-0 duration-200 focus:border-blue focus:outline-0"
+          />
+          <div className="flex justify-between mt-1">
+            <span className="text-xs text-gray-400">Mô tả nội dung ảnh cho SEO. Tối đa 125 ký tự.</span>
+            <span className="text-xs text-gray-400">{(tempProductvariant.imageAlt || "").length}/125</span>
+          </div>
         </div>
 
         {/* Save Button */}

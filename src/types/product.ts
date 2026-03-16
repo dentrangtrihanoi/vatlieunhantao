@@ -13,6 +13,7 @@ export type Product = {
   productVariants: {
     color: string;
     image: string;
+    imageAlt?: string | null;
     size: string;
     isDefault: boolean;
   }[];
@@ -36,6 +37,7 @@ export type IProductByDetails = {
   productVariants: {
     color: string;
     image: string;
+    imageAlt?: string | null;
     size: string;
     isDefault: boolean;
   }[];

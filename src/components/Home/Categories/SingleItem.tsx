@@ -11,7 +11,7 @@ const SingleItem = ({ item }: { item: Category }) => {
     >
       <div className="w-[130px] h-[130px] bg-[#F2F3F8]  rounded-full flex items-center justify-center mb-4">
         {item.img && (
-          <Image src={item.img} alt="Category" width={80} height={80} />
+          <Image src={item.img} alt={(item as any).imageAlt?.trim() || item.title} width={80} height={80} />
         )}
       </div>
 

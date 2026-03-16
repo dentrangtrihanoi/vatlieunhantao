@@ -117,6 +117,7 @@ model Category {
   id          Int       @id @default(autoincrement())
   title       String    @unique
   img         String
+  imageAlt          String?
   description       String
   descriptionBottom String?
   metaTitle         String?
@@ -163,6 +164,7 @@ model ProductVariant {
   id        String  @id @default(cuid())
   color     String
   image     String
+  imageAlt  String?
   size      String  @default("")
   isDefault Boolean @default(false)
   productId String
@@ -196,6 +198,7 @@ model HeroBanner {
   id          Int      @id @default(autoincrement())
   bannerName  String?
   bannerImage String
+  imageAlt    String?
   subtitle    String
   slug        String   @unique
   productSlug String
@@ -208,6 +211,7 @@ model HeroSlider {
   id           Int      @id @default(autoincrement())
   sliderName   String   @unique
   sliderImage  String
+  imageAlt     String?
   discountRate Int
   slug         String   @unique
   productSlug  String
@@ -221,6 +225,7 @@ model Countdown {
   title          String   @unique
   subtitle       String
   countdownImage String
+  imageAlt       String?
   slug           String?
   countdownDate  DateTime
   productSlug    String
@@ -245,6 +250,7 @@ model PostAuthor {
   name        String
   slug        String
   image       String
+  imageAlt    String?
   bio         String?
   description String?
   createdAt   DateTime @default(now())
@@ -261,6 +267,7 @@ model Post {
   categoryId Int
   tags       String[]
   mainImage  String
+  imageAlt   String?
   body       String
   isFeatured   Boolean      @default(false)
   metaTitle    String?
@@ -426,6 +433,7 @@ model Testimonial {
   designation String
   review      String
   image       String
+  imageAlt    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

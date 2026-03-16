@@ -33,7 +33,7 @@ const BlogItem = ({
           src={
             blog.mainImage ? blog?.mainImage : '/no image'
           }
-          alt="blog"
+          alt={(blog as any).imageAlt?.trim() || blog.title}
           className="w-full h-full object-cover"
           width={400}
           height={300}

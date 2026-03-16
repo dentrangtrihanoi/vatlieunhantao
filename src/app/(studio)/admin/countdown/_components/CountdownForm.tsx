@@ -15,6 +15,7 @@ interface CountdownInput {
   countdownImage: {
     image: File | null | string;
   };
+  imageAlt: string;
   slug?: string;
   countdownDate: Date;
   productSlug: string;
@@ -35,12 +36,13 @@ export default function CountdownForm({
     reset,
   } = useForm<CountdownInput>({
     defaultValues: {
-      title: countdownItem?.title || "", // Prefill title if editing
-      subtitle: countdownItem?.subtitle || "", // Prefill subtitle if editing
-      slug: countdownItem?.slug || "", // Prefill slug if editing
-      productSlug: countdownItem?.productSlug || "", // Prefill slug if editing
-      countdownDate: countdownItem?.countdownDate || undefined, // Prefill date if editing
-      countdownImage: { image: countdownItem?.countdownImage || null }, // Prefill image if editing
+      title: countdownItem?.title || "",
+      subtitle: countdownItem?.subtitle || "",
+      slug: countdownItem?.slug || "",
+      productSlug: countdownItem?.productSlug || "",
+      countdownDate: countdownItem?.countdownDate || undefined,
+      countdownImage: { image: countdownItem?.countdownImage || null },
+      imageAlt: (countdownItem as any)?.imageAlt || "",
     },
   });
 
@@ -56,6 +58,7 @@ export default function CountdownForm({
       formData.append("slug", data.slug || "");
 
       formData.append("productSlug", data.productSlug);
+      if (data.imageAlt) formData.append("imageAlt", data.imageAlt);
       if (data.countdownImage.image) {
         formData.append("image", data.countdownImage.image);
       } else {
@@ -188,6 +191,29 @@ export default function CountdownForm({
               error={!!fieldState.error}
               errorMessage={fieldState.error?.message}
             />
+          )}
+        />
+
+        {/* Image Alt Text */}
+        <Controller
+          control={control}
+          name="imageAlt"
+          rules={{ maxLength: { value: 125, message: "Tối đa 125 ký tự" } }}
+          render={({ field }) => (
+            <div className="w-full">
+              <InputGroup
+                label="Alt text ảnh countdown (SEO)"
+                type="text"
+                placeholder="Mô tả nội dung ảnh cho SEO"
+                name={field.name}
+                value={field.value ?? ""}
+                onChange={field.onChange}
+              />
+              <div className="flex justify-between mt-1">
+                <span className="text-xs text-gray-400">Tối đa 125 ký tự.</span>
+                <span className="text-xs text-gray-400">{(field.value || "").length}/125</span>
+              </div>
+            </div>
           )}
         />
 

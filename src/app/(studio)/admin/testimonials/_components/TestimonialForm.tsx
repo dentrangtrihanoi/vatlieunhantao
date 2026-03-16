@@ -16,6 +16,7 @@ interface TestimonialInput {
     image: {
         image: File | null | string;
     };
+    imageAlt: string;
 }
 
 type TestimonialProps = {
@@ -31,6 +32,7 @@ export default function TestimonialForm({ testimonial }: TestimonialProps) {
             image: testimonial?.image
                 ? { image: testimonial.image }
                 : { image: null },
+            imageAlt: (testimonial as any)?.imageAlt || "",
         },
     });
 
@@ -45,6 +47,7 @@ export default function TestimonialForm({ testimonial }: TestimonialProps) {
             formData.append("name", data.name);
             formData.append("designation", data.designation);
             formData.append("review", data.review);
+            if (data.imageAlt) formData.append("imageAlt", data.imageAlt);
             if (data.image.image) {
                 formData.append("image", data.image.image);
             } else {
@@ -183,6 +186,29 @@ export default function TestimonialForm({ testimonial }: TestimonialProps) {
                             error={!!fieldState.error}
                             errorMessage={fieldState.error?.message}
                         />
+                    )}
+                />
+
+                {/* Image Alt Text */}
+                <Controller
+                    control={control}
+                    name="imageAlt"
+                    rules={{ maxLength: { value: 125, message: "Tối đa 125 ký tự" } }}
+                    render={({ field }) => (
+                        <div className="w-full">
+                            <InputGroup
+                                label="Alt text ảnh tác giả (SEO)"
+                                type="text"
+                                placeholder="Mô tả nội dung ảnh cho SEO"
+                                name={field.name}
+                                value={field.value ?? ""}
+                                onChange={field.onChange}
+                            />
+                            <div className="flex justify-between mt-1">
+                                <span className="text-xs text-gray-400">Tối đa 125 ký tự.</span>
+                                <span className="text-xs text-gray-400">{(field.value || "").length}/125</span>
+                            </div>
+                        </div>
                     )}
                 />
             </div>

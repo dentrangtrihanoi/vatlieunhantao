@@ -61,7 +61,8 @@ export async function createHeroBanner(formData: FormData) {
         subtitle,
         slug,
         productSlug,
-        bannerImage: imageUrl
+        bannerImage: imageUrl,
+        imageAlt: (formData.get("imageAlt") as string)?.trim() || null,
       },
     });
     revalidateTag("heroBanners", { expire: 0 });
@@ -172,7 +173,8 @@ export async function updateHeroBanner(heroBannerId: number, formData: FormData)
         subtitle,
         slug,
         productSlug,
-        bannerImage: imageUrl
+        bannerImage: imageUrl,
+        imageAlt: (formData.get("imageAlt") as string)?.trim() || null,
       },
     });
 

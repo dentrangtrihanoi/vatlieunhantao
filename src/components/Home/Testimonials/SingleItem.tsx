@@ -76,7 +76,7 @@ const SingleItem = ({ testimonial }: { testimonial: Testimonial }) => {
             {testimonial.image ? (
               <Image
                 src={testimonial.image}
-                alt="author"
+                alt={(testimonial as any).imageAlt?.trim() || testimonial.name}
                 className="w-full h-full object-cover"
                 fill
               />

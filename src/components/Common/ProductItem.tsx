@@ -100,7 +100,7 @@ const ProductItem = ({ item, bgClr = "[#F6F7FB]" }: Props) => {
           <div className="relative w-full aspect-[1/1] overflow-hidden">
             <Image
               src={defaultVariant?.image ? defaultVariant.image : ""}
-              alt={item.title || "product-image"}
+              alt={defaultVariant?.imageAlt?.trim() || item.title || "product-image"}
               fill
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
               className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
