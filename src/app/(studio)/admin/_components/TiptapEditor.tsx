@@ -146,6 +146,13 @@ const TiptapEditor = ({
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // Check file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert("File quá lớn. Vui lòng chọn ảnh dưới 10MB.");
+            if (fileInputRef.current) fileInputRef.current.value = "";
+            return;
+        }
+
         const formData = new FormData();
         formData.append("file", file);
 
@@ -155,11 +162,11 @@ const TiptapEditor = ({
                 const alt = window.prompt("Alt text (mô tả ảnh cho SEO, tối đa 125 ký tự)", "") || "";
                 editor.chain().focus().setImage({ src: result.url, alt }).run();
             } else {
-                alert("Image upload failed");
+                alert("Upload thất bại: " + (result.error || "Lỗi không xác định. Kiểm tra Cloudinary credentials."));
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Upload error:", error);
-            alert("Upload failed");
+            alert("Upload thất bại: " + (error?.message || "Lỗi kết nối server"));
         } finally {
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
