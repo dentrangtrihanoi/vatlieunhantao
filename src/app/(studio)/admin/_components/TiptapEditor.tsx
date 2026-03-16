@@ -26,7 +26,6 @@ import {
 } from "lucide-react";
 import React, { useEffect } from "react";
 import cn from "@/utils/cn";
-import { uploadImage } from "@/app/actions/image-upload";
 
 interface TiptapEditorProps {
     label: string;
@@ -157,16 +156,22 @@ const TiptapEditor = ({
         formData.append("file", file);
 
         try {
-            const result = await uploadImage(formData);
+            // Use fetch API route instead of server action to get proper error messages
+            const response = await fetch("/api/upload-image", {
+                method: "POST",
+                body: formData,
+            });
+            const result = await response.json();
+
             if (result.success && result.url) {
                 const alt = window.prompt("Alt text (mô tả ảnh cho SEO, tối đa 125 ký tự)", "") || "";
                 editor.chain().focus().setImage({ src: result.url, alt }).run();
             } else {
-                alert("Upload thất bại: " + (result.error || "Lỗi không xác định. Kiểm tra Cloudinary credentials."));
+                alert("Upload thất bại: " + (result.error || "Lỗi không xác định"));
             }
         } catch (error: any) {
             console.error("Upload error:", error);
-            alert("Upload thất bại: " + (error?.message || "Lỗi kết nối server"));
+            alert("Upload thất bại: Lỗi kết nối server");
         } finally {
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
