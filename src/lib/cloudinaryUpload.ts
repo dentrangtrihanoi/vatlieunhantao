@@ -20,40 +20,38 @@ function sanitizeFilename(name: string): string {
     .replace(/^-|-$/g, "");         // Trim leading/trailing dashes
 }
 
-/**
- * Find an available public_id. If "folder/name" exists, try "folder/name-1", "folder/name-2", etc.
- */
-async function findAvailablePublicId(folder: string, baseName: string): Promise<string> {
-  const base = `${folder}/${baseName}`;
-
-  for (let i = 0; i <= 99; i++) {
-    const candidate = i === 0 ? base : `${base}-${i}`;
-    try {
-      await cloudinary.api.resource(candidate);
-      // Resource exists → try next suffix
-    } catch {
-      // Not found → this public_id is available
-      return candidate;
-    }
-  }
-
-  // Fallback: append timestamp if all 100 attempts fail
-  return `${base}-${Date.now()}`;
-}
 
 export async function uploadImageToCloudinary(
   file: File,
   folder: string = "next-merce-admin-uploads"
 ): Promise<string> {
+  // Validate env vars early for clear error messages
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    throw new Error(
+      `Missing Cloudinary environment variables: ${[
+        !cloudName && "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME",
+        !apiKey && "CLOUDINARY_API_KEY",
+        !apiSecret && "CLOUDINARY_API_SECRET",
+      ]
+        .filter(Boolean)
+        .join(", ")}`
+    );
+  }
+
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
   // Get base name without extension and sanitize
   const nameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
-  const baseName = sanitizeFilename(nameWithoutExt);
+  const baseName = sanitizeFilename(nameWithoutExt) || "image";
 
-  // Find available sequential public_id
-  const publicId = await findAvailablePublicId(folder, baseName);
+  // Use timestamp + random suffix for unique public_id (no Admin API needed)
+  const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+  const publicId = `${folder}/${baseName}-${uniqueSuffix}`;
 
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
@@ -65,7 +63,7 @@ export async function uploadImageToCloudinary(
       },
       (error, result) => {
         if (error) {
-          reject(error);
+          reject(new Error(`Cloudinary upload error: ${error.message}`));
         } else {
           resolve(result?.secure_url as string);
         }
