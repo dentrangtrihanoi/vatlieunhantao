@@ -48,7 +48,6 @@ export async function createProduct(formData: FormData) {
     if (
       !title ||
       !slug ||
-      !shortDescription ||
       isNaN(price) ||
       isNaN(quantity)
     ) {
@@ -138,7 +137,6 @@ export async function createProduct(formData: FormData) {
     });
 
     revalidateTag("products", { expire: 0 });
-    revalidatePath('/sitemap.xml');
 
     return successResponse(201, "Product created successfully", {
       ...product,
@@ -220,7 +218,6 @@ export async function deleteProduct(productId: string) {
     });
 
     revalidateTag("products", { expire: 0 });
-    revalidatePath('/sitemap.xml');
     return successResponse(200, "Product and related data deleted successfully");
   } catch (error: any) {
     console.error("Error deleting product:", error?.stack || error);
