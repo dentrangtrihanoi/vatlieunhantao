@@ -25,7 +25,7 @@ export async function createProduct(formData: FormData) {
     const categoryId = formData.get("categoryId") as string;
     const slug = formData.get("slug") as string;
     const sku = formData.get("sku") as string | undefined;
-    const shortDescription = formData.get("shortDescription") as string;
+    const shortDescription = (formData.get("shortDescription") as string) || (formData.get("title") as string) || "";
     const quantity = parseInt(formData.get("quantity") as string, 10);
     const description = formData.get("description") as string | undefined;
     const body = formData.get("body") as string | undefined;
@@ -240,7 +240,7 @@ export async function updateProduct(productId: string, formData: FormData) {
     const categoryId = formData.get("categoryId") as string;
     const slug = formData.get("slug") as string;
     const sku = formData.get("sku") as string | null;
-    const shortDescription = formData.get("shortDescription") as string;
+    const shortDescription = (formData.get("shortDescription") as string) || (formData.get("title") as string) || "";
     const quantity = parseInt(formData.get("quantity") as string, 10);
     const description = formData.get("description") as string | undefined;
     const body = formData.get("body") as string | undefined;
@@ -264,7 +264,6 @@ export async function updateProduct(productId: string, formData: FormData) {
       !productId ||
       !title ||
       !slug ||
-      !shortDescription ||
       isNaN(price) ||
       isNaN(quantity)
     ) {
