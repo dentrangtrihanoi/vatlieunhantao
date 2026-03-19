@@ -125,7 +125,7 @@ const TiptapEditor = ({
 
     const confirmImageModal = () => {
         const src = imageModal.mode === "upload" ? imageModal.pendingUrl! : imageModal.url.trim();
-        if (!src) return;
+        if (!src || !editor) return;
         editor.chain().focus().setImage({ src, alt: imageModal.alt.trim() }).run();
         setImageModal({ show: false, mode: "url", url: "", alt: "" });
     };
