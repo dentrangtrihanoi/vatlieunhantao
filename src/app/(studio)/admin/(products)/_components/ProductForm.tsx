@@ -604,6 +604,7 @@ export default function ProductAddForm({ product, categories }: ProductProps) {
                             </th>
                             <th className="p-3 text-sm font-medium">Color</th>
                             <th className="p-3 text-sm font-medium">Size</th>
+                            <th className="p-3 text-sm font-medium">Alt Text (SEO)</th>
                             <th className="p-3 text-sm font-medium">
                               Is Default
                             </th>
@@ -624,7 +625,7 @@ export default function ProductAddForm({ product, categories }: ProductProps) {
                                         ? URL.createObjectURL(thumb.image)
                                         : thumb.image!
                                     }
-                                    alt="Thumbnail"
+                                    alt={thumb.imageAlt || "Thumbnail"}
                                     className="object-cover w-20 h-20 rounded"
                                     width={64}
                                     height={64}
@@ -640,6 +641,23 @@ export default function ProductAddForm({ product, categories }: ProductProps) {
                               {/* Size */}
                               <td className="p-3 text-gray-7 whitespace-nowrap">
                                 {thumb.size}
+                              </td>
+
+                              {/* Alt Text */}
+                              <td className="p-3">
+                                <input
+                                  type="text"
+                                  maxLength={125}
+                                  value={thumb.imageAlt || ""}
+                                  onChange={(e) => {
+                                    const updated = field.value.map((item, idx) =>
+                                      idx === index ? { ...item, imageAlt: e.target.value } : item
+                                    );
+                                    field.onChange(updated);
+                                  }}
+                                  placeholder="Mô tả ảnh (SEO)"
+                                  className="w-40 rounded border border-gray-3 px-2 py-1 text-xs text-dark outline-none focus:border-blue transition"
+                                />
                               </td>
 
                               {/* Is Default */}

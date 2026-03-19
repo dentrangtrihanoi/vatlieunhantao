@@ -29,7 +29,7 @@ type CategoryProps = {
 };
 
 export default function CategoryForm({ category }: CategoryProps) {
-  const { handleSubmit, control, watch, register, reset } =
+  const { handleSubmit, control, watch, register, reset, setValue } =
     useForm<CategoryInput>({
       defaultValues: {
         title: category?.title || "", // Prefill title if editing
@@ -265,36 +265,11 @@ export default function CategoryForm({ category }: CategoryProps) {
             required={true}
             error={!!fieldState.error}
             errorMessage={fieldState.error?.message}
+            altText={watch("imageAlt")}
+            onAltTextChange={(val) => setValue("imageAlt", val)}
+            altTextLabel="Alt text ảnh danh mục (SEO)"
           />
         )}
-      />
-
-      {/* Image Alt Text */}
-      <Controller
-        control={control}
-        name="imageAlt"
-        rules={{ maxLength: { value: 125, message: "Tối đa 125 ký tự" } }}
-        render={({ field, fieldState }) => {
-          const charCount = (field.value || "").length;
-          return (
-            <div className="w-full mt-3 mb-5">
-              <InputGroup
-                label="Alt text ảnh danh mục (SEO)"
-                type="text"
-                placeholder="Mô tả nội dung ảnh cho SEO"
-                error={!!fieldState.error}
-                errorMessage={fieldState.error?.message}
-                name={field.name}
-                value={field.value ?? ""}
-                onChange={field.onChange}
-              />
-              <div className="flex justify-between mt-1">
-                <span className="text-xs text-gray-400">Mô tả nội dung ảnh. Tối đa 125 ký tự.</span>
-                <span className="text-xs text-gray-400">{charCount}/125</span>
-              </div>
-            </div>
-          );
-        }}
       />
 
       {/* Submit Button */}

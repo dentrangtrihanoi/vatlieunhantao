@@ -273,36 +273,11 @@ export default function PostForm({
               required={true}
               error={!!fieldState.error}
               errorMessage={fieldState.error?.message}
+              altText={watch("imageAlt")}
+              onAltTextChange={(val) => setValue("imageAlt", val)}
+              altTextLabel="Alt text ảnh bài viết (SEO)"
             />
           )}
-        />
-
-        {/* Image Alt Text */}
-        <Controller
-          control={control}
-          name="imageAlt"
-          rules={{ maxLength: { value: 125, message: "Tối đa 125 ký tự" } }}
-          render={({ field, fieldState }) => {
-            const charCount = (field.value || "").length;
-            return (
-              <div className="w-full">
-                <InputGroup
-                  label="Alt text ảnh đại diện (SEO)"
-                  type="text"
-                  placeholder="Mô tả nội dung ảnh cho SEO"
-                  error={!!fieldState.error}
-                  errorMessage={fieldState.error?.message}
-                  name={field.name}
-                  value={field.value ?? ""}
-                  onChange={field.onChange}
-                />
-                <div className="flex justify-between mt-1">
-                  <span className="text-xs text-gray-400">Mô tả nội dung ảnh. Tối đa 125 ký tự.</span>
-                  <span className="text-xs text-gray-400">{charCount}/125</span>
-                </div>
-              </div>
-            );
-          }}
         />
         <Controller
           control={control}
