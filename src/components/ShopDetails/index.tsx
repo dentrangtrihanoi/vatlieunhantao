@@ -195,7 +195,7 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
 
                       <Image
                         src={previewImg ? previewImg : ""}
-                        alt={product.title || "product-image"}
+                        alt={product.productVariants?.find(v => v.image === previewImg)?.imageAlt?.trim() || product.title || "product-image"}
                         width={600}
                         height={600}
                         sizes="(max-width: 768px) 100vw, 50vw"
@@ -224,7 +224,7 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
                               width={100}
                               height={100}
                               src={item.image}
-                              alt="thumbnail"
+                              alt={item.imageAlt?.trim() || product.title || "thumbnail"}
                               className="w-full h-full object-cover"
                               onError={() => handleThumbnailError(key)}
                             />
