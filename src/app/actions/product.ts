@@ -283,73 +283,161 @@ export async function updateProduct(productId: string, formData: FormData) {
     if (!existingProduct) return errorResponse(404, "Product not found");
 
     // **Handle Thumbnails (Optional)**
-    const thumbnailFiles = formData.getAll("thumbnails");
+    const productVariantsDataRaw = formData.get("productVariantsData") as string | null;
 
-    if (thumbnailFiles.length > 0) {
+    if (productVariantsDataRaw) {
+      type IncomingVariant = {
+        color?: string;
+        size?: string;
+        imageAlt?: string | null;
+        isDefault?: boolean | string;
+        image?: string;
+      };
 
-      const newFileUploads = thumbnailFiles.filter(
-        (file) => file instanceof File
-      ); // Check if any new files are uploaded
-      // Proceed only if new images are uploaded
+      const incomingVariants = JSON.parse(productVariantsDataRaw) as IncomingVariant[];
+      const normalizedVariants = incomingVariants.map((variant, index) => {
+        const file = formData.get(`thumbnailFile_${index}`);
+        return {
+          color: variant.color || "Default",
+          size: variant.size || "",
+          imageAlt: variant.imageAlt?.trim() || null,
+          isDefault: variant.isDefault === true || variant.isDefault === "true",
+          image: typeof variant.image === "string" ? variant.image.trim() : "",
+          file,
+        };
+      });
 
-      if (newFileUploads.length > 0) {
-        // Step 1: Fetch existing thumbnails
-        const existingThumbnails = await prisma.productVariant.findMany({
-          where: { productId },
-          select: { image: true }, // Get only the image URLs
-        });
-
-        // Step 2: Delete old images from Cloudinary
-        if (existingThumbnails.length > 0) {
-          for (const thumb of existingThumbnails) {
-            await deleteImageFromCloudinary(thumb.image);
-          }
-        }
+      // Ensure one default variant always exists
+      const hasDefault = normalizedVariants.some((variant) => variant.isDefault);
+      if (!hasDefault && normalizedVariants.length > 0) {
+        normalizedVariants[0].isDefault = true;
       }
 
-      // Step 3: Delete old thumbnails from the database
-      await prisma.productVariant.deleteMany({ where: { productId } });
-
-      // Step 4: Upload new thumbnails
       const newThumbnails: {
         color: string;
         image: string;
         imageAlt: string | null;
         size: string;
-        isDeault: boolean;
+        isDefault: boolean;
       }[] = [];
+      const keptExistingImages = new Set<string>();
 
-      for (let i = 0; i < thumbnailFiles.length; i++) {
-        const file = thumbnailFiles[i];
-        const color = (formData.get(`color_${i}`) as string) || "Default";
-        const size = formData.get(`size_${i}`) as string;
-        const isDeaultRaw = formData.get(`isDefault_${i}`);
-        const isDeault = isDeaultRaw === "true";
+      for (const variant of normalizedVariants) {
+        if (variant.file instanceof File && variant.file.size > 0) {
+          const uploadedImage = await uploadImageToCloudinary(variant.file, "products");
+          newThumbnails.push({
+            color: variant.color,
+            image: uploadedImage,
+            imageAlt: variant.imageAlt,
+            size: variant.size,
+            isDefault: variant.isDefault,
+          });
+          continue;
+        }
 
-        if (file instanceof File) {
-          const imageUrl = await uploadImageToCloudinary(file, "products"); // Upload new image
-          const rawAlt = formData.get(`imageAlt_${i}`) as string | null;
-          const imageAlt = rawAlt?.trim() || null;
-          newThumbnails.push({ color, image: imageUrl, imageAlt, size, isDeault });
-        } else if (typeof file === "string") {
-          const rawAlt = formData.get(`imageAlt_${i}`) as string | null;
-          const imageAlt = rawAlt?.trim() || null;
-          newThumbnails.push({ color, image: file, imageAlt, size, isDeault }); // Keep existing image (if passed)
+        if (variant.image) {
+          keptExistingImages.add(variant.image);
+          newThumbnails.push({
+            color: variant.color,
+            image: variant.image,
+            imageAlt: variant.imageAlt,
+            size: variant.size,
+            isDefault: variant.isDefault,
+          });
         }
       }
 
-      // Step 5: Insert new thumbnails into the database
+      if (newThumbnails.length === 0) {
+        return errorResponse(400, "At least one thumbnail is required");
+      }
+
+      // Delete only images no longer referenced
+      const oldImages = existingProduct.productVariants.map((variant) => variant.image);
+      const imagesToDelete = oldImages.filter((image) => !keptExistingImages.has(image));
+      for (const image of imagesToDelete) {
+        try {
+          await deleteImageFromCloudinary(image);
+        } catch (error) {
+          console.error("Failed to delete image from Cloudinary:", image, error);
+        }
+      }
+
+      await prisma.productVariant.deleteMany({ where: { productId } });
       await prisma.productVariant.createMany({
         data: newThumbnails.map((thumbnail) => ({
           color: thumbnail.color,
           image: thumbnail.image,
           imageAlt: thumbnail.imageAlt,
           size: thumbnail.size,
-          isDefault: thumbnail.isDeault,
+          isDefault: thumbnail.isDefault,
           productId,
         })),
       });
-    };
+    } else {
+      // Backward-compatible flow when productVariantsData is not provided
+      const thumbnailFiles = formData.getAll("thumbnails");
+
+      if (thumbnailFiles.length > 0) {
+        const newFileUploads = thumbnailFiles.filter((file) => file instanceof File);
+
+        if (newFileUploads.length > 0) {
+          const existingThumbnails = await prisma.productVariant.findMany({
+            where: { productId },
+            select: { image: true },
+          });
+
+          if (existingThumbnails.length > 0) {
+            for (const thumb of existingThumbnails) {
+              try {
+                await deleteImageFromCloudinary(thumb.image);
+              } catch (error) {
+                console.error("Failed to delete image from Cloudinary:", thumb.image, error);
+              }
+            }
+          }
+        }
+
+        await prisma.productVariant.deleteMany({ where: { productId } });
+
+        const newThumbnails: {
+          color: string;
+          image: string;
+          imageAlt: string | null;
+          size: string;
+          isDeault: boolean;
+        }[] = [];
+
+        for (let i = 0; i < thumbnailFiles.length; i++) {
+          const file = thumbnailFiles[i];
+          const color = (formData.get(`color_${i}`) as string) || "Default";
+          const size = formData.get(`size_${i}`) as string;
+          const isDeaultRaw = formData.get(`isDefault_${i}`);
+          const isDeault = isDeaultRaw === "true";
+
+          if (file instanceof File) {
+            const imageUrl = await uploadImageToCloudinary(file, "products");
+            const rawAlt = formData.get(`imageAlt_${i}`) as string | null;
+            const imageAlt = rawAlt?.trim() || null;
+            newThumbnails.push({ color, image: imageUrl, imageAlt, size, isDeault });
+          } else if (typeof file === "string") {
+            const rawAlt = formData.get(`imageAlt_${i}`) as string | null;
+            const imageAlt = rawAlt?.trim() || null;
+            newThumbnails.push({ color, image: file, imageAlt, size, isDeault });
+          }
+        }
+
+        await prisma.productVariant.createMany({
+          data: newThumbnails.map((thumbnail) => ({
+            color: thumbnail.color,
+            image: thumbnail.image,
+            imageAlt: thumbnail.imageAlt,
+            size: thumbnail.size,
+            isDefault: thumbnail.isDeault,
+            productId,
+          })),
+        });
+      }
+    }
 
 
     // **Update Additional Information**

@@ -252,15 +252,33 @@ export default function ProductAddForm({ product, categories }: ProductProps) {
         setIsLoading(false);
         return;
       }
-      data.productVariants.forEach((thumb, index) => {
-        if (thumb.image) {
-          formData.append("thumbnails", thumb.image);
-          formData.append(`color_${index}`, thumb.color);
-          formData.append(`size_${index}`, thumb.size);
-          formData.append(`isDefault_${index}`, thumb.isDefault.toString());
-          if (thumb.imageAlt) formData.append(`imageAlt_${index}`, thumb.imageAlt);
-        }
-      });
+      if (product && product.id) {
+        const variantsPayload = data.productVariants.map((thumb) => ({
+          color: thumb.color || "",
+          size: thumb.size || "",
+          imageAlt: thumb.imageAlt || "",
+          isDefault: !!thumb.isDefault,
+          image: typeof thumb.image === "string" ? thumb.image : "",
+        }));
+
+        formData.append("productVariantsData", JSON.stringify(variantsPayload));
+
+        data.productVariants.forEach((thumb, index) => {
+          if (thumb.image instanceof File) {
+            formData.append(`thumbnailFile_${index}`, thumb.image);
+          }
+        });
+      } else {
+        data.productVariants.forEach((thumb, index) => {
+          if (thumb.image) {
+            formData.append("thumbnails", thumb.image);
+            formData.append(`color_${index}`, thumb.color);
+            formData.append(`size_${index}`, thumb.size);
+            formData.append(`isDefault_${index}`, thumb.isDefault.toString());
+            if (thumb.imageAlt) formData.append(`imageAlt_${index}`, thumb.imageAlt);
+          }
+        });
+      }
       let result;
       if (product && product.id) {
         result = await updateProduct(product.id, formData);
