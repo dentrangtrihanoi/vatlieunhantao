@@ -41,6 +41,7 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
   const { openPreviewModal } = usePreviewSlider();
   const router = useRouter();
   const [previewImg, setPreviewImg] = useState(defaultVariant?.image);
+  const [previewAlt, setPreviewAlt] = useState<string>((defaultVariant as any)?.imageAlt || product.title || "");
   const [quantity, setQuantity] = useState(1);
   const [activeColor, setActiveColor] = useState(defaultVariant?.color);
   const [activeSize, setActiveSize] = useState(defaultVariant?.size);
@@ -195,7 +196,7 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
 
                       <Image
                         src={previewImg ? previewImg : ""}
-                        alt={product.title || "product-image"}
+                        alt={previewAlt || product.title}
                         width={600}
                         height={600}
                         sizes="(max-width: 768px) 100vw, 50vw"
@@ -213,7 +214,10 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
 
                         return (
                           <button
-                            onClick={() => setPreviewImg(item?.image)}
+                            onClick={() => {
+                              setPreviewImg(item?.image);
+                              setPreviewAlt(item?.imageAlt || product.title || "");
+                            }}
                             key={key}
                             className={`flex items-center justify-center w-15 sm:w-25 h-15 sm:h-25 overflow-hidden rounded-lg bg-gray-2 shadow-1 ease-out duration-200 border-2 hover:border-blue ${item?.image === previewImg
                               ? "border-blue"
@@ -224,7 +228,7 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
                               width={100}
                               height={100}
                               src={item.image}
-                              alt="thumbnail"
+                              alt={item.imageAlt || item.color || product.title}
                               className="w-full h-full object-cover"
                               onError={() => handleThumbnailError(key)}
                             />
@@ -329,11 +333,11 @@ const ShopDetails = ({ product, avgRating, totalRating }: IProps) => {
                                   key={key}
                                   onClick={() => {
                                     setActiveColor(item.color);
-                                    // Find first image for this color
-                                    const variantImg = product.productVariants.find(
+                                    const variant = product.productVariants.find(
                                       (pv) => pv.color === item.color
-                                    )?.image;
-                                    if (variantImg) setPreviewImg(variantImg);
+                                    );
+                                    if (variant?.image) setPreviewImg(variant.image);
+                                    setPreviewAlt((variant as any)?.imageAlt || product.title || "");
                                   }}
                                   title={item.color}
                                   className={`cursor-pointer inline-flex items-center justify-center transition-all duration-200 ${isColorCode
