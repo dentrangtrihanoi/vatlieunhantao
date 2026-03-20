@@ -24,7 +24,7 @@ type TestimonialProps = {
 };
 
 export default function TestimonialForm({ testimonial }: TestimonialProps) {
-    const { handleSubmit, control, reset } = useForm<TestimonialInput>({
+    const { handleSubmit, control, reset, watch, setValue } = useForm<TestimonialInput>({
         defaultValues: {
             name: testimonial?.name || "",
             designation: testimonial?.designation || "",
@@ -185,30 +185,10 @@ export default function TestimonialForm({ testimonial }: TestimonialProps) {
                             required
                             error={!!fieldState.error}
                             errorMessage={fieldState.error?.message}
+                            altText={watch("imageAlt")}
+                            onAltTextChange={(val) => setValue("imageAlt", val)}
+                            altTextLabel="Alt text ảnh testimonial (SEO)"
                         />
-                    )}
-                />
-
-                {/* Image Alt Text */}
-                <Controller
-                    control={control}
-                    name="imageAlt"
-                    rules={{ maxLength: { value: 125, message: "Tối đa 125 ký tự" } }}
-                    render={({ field }) => (
-                        <div className="w-full">
-                            <InputGroup
-                                label="Alt text ảnh tác giả (SEO)"
-                                type="text"
-                                placeholder="Mô tả nội dung ảnh cho SEO"
-                                name={field.name}
-                                value={field.value ?? ""}
-                                onChange={field.onChange}
-                            />
-                            <div className="flex justify-between mt-1">
-                                <span className="text-xs text-gray-400">Tối đa 125 ký tự.</span>
-                                <span className="text-xs text-gray-400">{(field.value || "").length}/125</span>
-                            </div>
-                        </div>
                     )}
                 />
             </div>

@@ -31,6 +31,8 @@ export default function PostAuthorForm({ authorItem }: AuthorProps) {
     handleSubmit,
     control,
     register,
+    watch,
+    setValue,
     formState: { errors },
     reset,
   } = useForm<AuthorInput>({
@@ -155,30 +157,10 @@ export default function PostAuthorForm({ authorItem }: AuthorProps) {
               required={true}
               error={!!fieldState.error}
               errorMessage={fieldState.error?.message}
+              altText={watch("imageAlt")}
+              onAltTextChange={(val) => setValue("imageAlt", val)}
+              altTextLabel="Alt text ảnh tác giả (SEO)"
             />
-          )}
-        />
-
-        {/* Image Alt Text */}
-        <Controller
-          control={control}
-          name="imageAlt"
-          rules={{ maxLength: { value: 125, message: "Tối đa 125 ký tự" } }}
-          render={({ field }) => (
-            <div className="w-full">
-              <InputGroup
-                label="Alt text ảnh tác giả (SEO)"
-                type="text"
-                placeholder="Mô tả nội dung ảnh cho SEO"
-                name={field.name}
-                value={field.value ?? ""}
-                onChange={field.onChange}
-              />
-              <div className="flex justify-between mt-1">
-                <span className="text-xs text-gray-400">Tối đa 125 ký tự.</span>
-                <span className="text-xs text-gray-400">{(field.value || "").length}/125</span>
-              </div>
-            </div>
           )}
         />
 

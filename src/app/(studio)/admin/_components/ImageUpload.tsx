@@ -14,6 +14,12 @@ interface ImageUploadProps {
   defaultColor?: string;
   showPrevimg?: boolean;
   col?: string;
+  /** Alt text value (controlled from outside) */
+  altText?: string;
+  /** Called when alt text changes */
+  onAltTextChange?: (alt: string) => void;
+  /** Label shown above the alt text input */
+  altTextLabel?: string;
 }
 
 export default function ImageUpload({
@@ -29,14 +35,10 @@ export default function ImageUpload({
   defaultColor,
   showPrevimg = true,
   col = "grid-cols-1",
+  altText,
+  onAltTextChange,
+  altTextLabel = "Alt text ảnh (SEO)",
 }: ImageUploadProps & { error?: boolean; errorMessage?: string }) {
-  // const [previews, setPreviews] = useState<string[]>(
-  //   images
-  //     ? images.map((file) =>
-  //         typeof file === "string" ? file : URL.createObjectURL(file)
-  //       )
-  //     : []
-  // );
   const [previews, setPreviews] = useState<string[]>(() => {
     if (!images) return [];
     return images.map((file) => {
@@ -69,13 +71,11 @@ export default function ImageUpload({
 
     if (multiple) {
       setImages(files);
-      // Revoke previous URLs before setting new ones
       previews.forEach((url) => URL.revokeObjectURL(url));
       setPreviews(files.map((file) => URL.createObjectURL(file)));
     } else {
       const file = files.length > 0 ? files[0] : null;
 
-      // Revoke previous preview URL if any
       if (previews.length > 0) {
         URL.revokeObjectURL(previews[0]);
       }
@@ -83,6 +83,8 @@ export default function ImageUpload({
       setPreviews(file ? [URL.createObjectURL(file)] : []);
     }
   };
+
+  const hasImage = previews.length > 0;
 
   return (
     <div>
@@ -168,6 +170,27 @@ export default function ImageUpload({
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {/* Integrated Alt Text Input — shows when onAltTextChange is provided */}
+          {onAltTextChange && hasImage && (
+            <div className="mt-2">
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                {altTextLabel}
+              </label>
+              <input
+                type="text"
+                maxLength={125}
+                value={altText ?? ""}
+                onChange={(e) => onAltTextChange(e.target.value)}
+                placeholder="Mô tả nội dung ảnh để tối ưu SEO"
+                className="w-full rounded-lg border border-gray-3 px-3 py-2 text-sm text-dark outline-none focus:border-blue transition"
+              />
+              <div className="flex justify-between mt-0.5">
+                <span className="text-xs text-gray-400">Giúp Google hiểu nội dung ảnh</span>
+                <span className="text-xs text-gray-400">{(altText ?? "").length}/125</span>
+              </div>
             </div>
           )}
         </div>

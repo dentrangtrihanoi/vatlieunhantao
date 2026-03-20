@@ -229,6 +229,7 @@ export const getProductBySlug = async (slug: string) => {
       productVariants: {
         select: {
           image: true,
+          imageAlt: true,
           color: true,
           size: true,
           isDefault: true

@@ -24,7 +24,7 @@ import {
     Quote, Minus, Subscript as SubIcon, Superscript as SupIcon,
     Table as TableIcon, Highlighter, Baseline, Eraser, UploadCloud
 } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import cn from "@/utils/cn";
 
 interface TiptapEditorProps {
@@ -108,7 +108,31 @@ const TiptapEditor = ({
         immediatelyRender: false,
     });
 
-    const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Modal state for image insertion (replaces window.prompt)
+    const [imageModal, setImageModal] = useState<{
+        show: boolean;
+        mode: "url" | "upload";
+        url: string;
+        alt: string;
+        pendingUrl?: string; // for upload mode: url already resolved
+    }>({ show: false, mode: "url", url: "", alt: "" });
+
+    const openImageUrlModal = () => {
+        setImageModal({ show: true, mode: "url", url: "", alt: "" });
+    };
+
+    const confirmImageModal = () => {
+        const src = imageModal.mode === "upload" ? imageModal.pendingUrl! : imageModal.url.trim();
+        if (!src || !editor) return;
+        editor.chain().focus().setImage({ src, alt: imageModal.alt.trim() }).run();
+        setImageModal({ show: false, mode: "url", url: "", alt: "" });
+    };
+
+    const cancelImageModal = () => {
+        setImageModal({ show: false, mode: "url", url: "", alt: "" });
+    };
 
     useEffect(() => {
         if (editor && value && editor.getHTML() !== value) {
@@ -135,10 +159,7 @@ const TiptapEditor = ({
     };
 
     const addImage = () => {
-        const url = window.prompt("Image URL");
-        if (!url) return;
-        const alt = window.prompt("Alt text (mô tả ảnh cho SEO, tối đa 125 ký tự)", "") || "";
-        editor.chain().focus().setImage({ src: url, alt }).run();
+        openImageUrlModal();
     };
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,8 +185,7 @@ const TiptapEditor = ({
             const result = await response.json();
 
             if (result.success && result.url) {
-                const alt = window.prompt("Alt text (mô tả ảnh cho SEO, tối đa 125 ký tự)", "") || "";
-                editor.chain().focus().setImage({ src: result.url, alt }).run();
+                setImageModal({ show: true, mode: "upload", url: "", alt: "", pendingUrl: result.url });
             } else {
                 alert("Upload thất bại: " + (result.error || "Lỗi không xác định"));
             }
@@ -411,6 +431,76 @@ const TiptapEditor = ({
             </div>
 
             {errMsg && <p className="text-sm text-red mt-1.5">{errMsg}</p>}
+
+            {/* Image Insert Modal */}
+            {imageModal.show && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                    <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md mx-4">
+                        <h3 className="text-base font-semibold text-dark mb-4">
+                            {imageModal.mode === "url" ? "Chèn ảnh từ URL" : "Điền alt text cho ảnh"}
+                        </h3>
+
+                        {imageModal.mode === "url" && (
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    URL ảnh <span className="text-red">*</span>
+                                </label>
+                                <input
+                                    type="url"
+                                    className="w-full rounded-lg border border-gray-3 px-3 py-2 text-sm text-dark outline-none focus:border-blue transition"
+                                    placeholder="https://..."
+                                    value={imageModal.url}
+                                    onChange={(e) => setImageModal((prev) => ({ ...prev, url: e.target.value }))}
+                                    autoFocus
+                                />
+                            </div>
+                        )}
+
+                        {imageModal.mode === "upload" && (
+                            <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                                <img src={imageModal.pendingUrl} alt="" className="max-h-32 rounded object-contain mx-auto" />
+                            </div>
+                        )}
+
+                        <div className="mb-5">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Alt text (mô tả ảnh cho SEO)
+                            </label>
+                            <input
+                                type="text"
+                                maxLength={125}
+                                className="w-full rounded-lg border border-gray-3 px-3 py-2 text-sm text-dark outline-none focus:border-blue transition"
+                                placeholder="Mô tả nội dung ảnh, tối đa 125 ký tự"
+                                value={imageModal.alt}
+                                onChange={(e) => setImageModal((prev) => ({ ...prev, alt: e.target.value }))}
+                                autoFocus={imageModal.mode === "upload"}
+                            />
+                            <div className="flex justify-between mt-1">
+                                <span className="text-xs text-gray-400">Giúp tăng SEO và accessibility</span>
+                                <span className="text-xs text-gray-400">{imageModal.alt.length}/125</span>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 justify-end">
+                            <button
+                                type="button"
+                                onClick={cancelImageModal}
+                                className="px-4 py-2 text-sm rounded-lg border border-gray-3 text-gray-600 hover:bg-gray-50 transition"
+                            >
+                                Hủy
+                            </button>
+                            <button
+                                type="button"
+                                onClick={confirmImageModal}
+                                disabled={imageModal.mode === "url" && !imageModal.url.trim()}
+                                className="px-4 py-2 text-sm rounded-lg bg-blue text-white hover:bg-blue-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Chèn ảnh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
